@@ -1,10 +1,11 @@
 {
   "name": "Sora Prompt Builder",
-  "short_name": "SoraPrompt",
-  "start_url": ".",
+  "short_name": "Sora",
+  "start_url": "/sora-prompt-builder/",   // ★絶対パスでリポ名を入れる
+  "scope": "/sora-prompt-builder/",       // ★ここも揃える
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#111111",
   "icons": [
     { "src": "sora_icon_192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "sora_icon_512.png", "sizes": "512x512", "type": "image/png" }
