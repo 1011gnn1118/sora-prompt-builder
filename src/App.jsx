@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { Copy, Shuffle, RotateCcw, Download, Languages, FileText, Wand2, ShieldCheck } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { Copy, Shuffle, RotateCcw, Download, Languages, Wand2, ShieldCheck } from "lucide-react";
 
 // ===== UI PRIMITIVES (no external UI deps) =====
 const Card = ({ children, className = "" }) => (
@@ -65,11 +65,14 @@ const options = {
     { en: "young adult", jp: "若い大人" },
     { en: "adult", jp: "大人" },
     { en: "mature", jp: "成熟した大人" },
+    { en: "child", jp: "子供" },
+    { en: "senior", jp: "高齢者" },
   ],
   gender: [
     { en: "female", jp: "女性" },
     { en: "male", jp: "男性" },
     { en: "non-binary", jp: "ノンバイナリー" },
+    { en: "agender", jp: "無性別" },
   ],
   ethnicity: [
     { en: "Japanese", jp: "日本人風" },
@@ -78,6 +81,9 @@ const options = {
     { en: "Caucasian", jp: "白人風" },
     { en: "Latina", jp: "ラティーナ風" },
     { en: "Black", jp: "黒人風" },
+    { en: "South Asian", jp: "南アジア風" },
+    { en: "Southeast Asian", jp: "東南アジア風" },
+    { en: "Middle Eastern", jp: "中東風" },
   ],
   face: [
     { en: "natural features", jp: "自然な顔立ち" },
@@ -86,6 +92,11 @@ const options = {
     { en: "light freckles", jp: "薄いそばかす" },
     { en: "beauty mark under eye", jp: "目の下のほくろ" },
     { en: "subtle dimples", jp: "控えめなえくぼ" },
+    { en: "sharp cheekbones", jp: "シャープな頬骨" },
+    { en: "almond eyes", jp: "アーモンド形の目" },
+    { en: "soft blush on cheeks", jp: "頬の淡い赤み" },
+    { en: "upturned nose", jp: "上向きの鼻" },
+    { en: "sleepy hooded eyes", jp: "眠そうな一重まぶた" },
   ],
   hairStyle: [
     { en: "long straight", jp: "ロングのストレート" },
@@ -93,11 +104,20 @@ const options = {
     { en: "low ponytail", jp: "低い位置のポニーテール" },
     { en: "bob", jp: "ボブ" },
     { en: "side bangs", jp: "サイドバング" },
+    { en: "pixie cut", jp: "ピクシーカット" },
+    { en: "top knot", jp: "トップノット" },
+    { en: "messy bun", jp: "ラフなお団子" },
+    { en: "curly bob", jp: "カールのボブ" },
+    { en: "double braids", jp: "二つ編み" },
   ],
   makeup: [
     { en: "none", jp: "メイクなし" },
     { en: "natural makeup", jp: "ナチュラルメイク" },
     { en: "soft glam", jp: "ソフトグラム" },
+    { en: "bold makeup", jp: "大胆なメイク" },
+    { en: "smokey eye", jp: "スモーキーアイ" },
+    { en: "glossy lips", jp: "ツヤのあるリップ" },
+    { en: "cat-eye eyeliner", jp: "キャットアイライン" },
   ],
   eyeColor: [
     { en: "dark brown", jp: "ダークブラウン" },
@@ -105,22 +125,37 @@ const options = {
     { en: "hazel", jp: "ヘーゼル" },
     { en: "black", jp: "黒" },
     { en: "gray", jp: "グレー" },
+    { en: "blue", jp: "ブルー" },
+    { en: "green", jp: "グリーン" },
   ],
   tops: [
     { en: "fitted light gray long-sleeve, slightly open neckline", jp: "やや胸元の開いた薄いグレーの長袖" },
     { en: "oversized knit sweater", jp: "オーバーサイズのニット" },
     { en: "simple white tee", jp: "シンプルな白T" },
     { en: "button-up shirt", jp: "ボタンアップシャツ" },
+    { en: "casual hoodie", jp: "カジュアルなパーカー" },
+    { en: "silk blouse", jp: "シルクのブラウス" },
+    { en: "graphic tee", jp: "グラフィックT" },
+    { en: "turtleneck sweater", jp: "タートルネックセーター" },
   ],
   bottoms: [
     { en: "dark trousers", jp: "ダークトラウザー" },
     { en: "pleated skirt", jp: "プリーツスカート" },
     { en: "high-waist jeans", jp: "ハイウエストジーンズ" },
+    { en: "tailored shorts", jp: "テーラードショーツ" },
+    { en: "pencil skirt", jp: "タイトスカート" },
+    { en: "flowy maxi skirt", jp: "ゆったりしたマキシスカート" },
+    { en: "ripped jeans", jp: "ダメージジーンズ" },
   ],
   outer: [
     { en: "", jp: "" },
     { en: "tailored blazer", jp: "テーラードブレザー" },
     { en: "light cardigan", jp: "薄手のカーディガン" },
+    { en: "denim jacket", jp: "デニムジャケット" },
+    { en: "trench coat", jp: "トレンチコート" },
+    { en: "leather jacket", jp: "レザージャケット" },
+    { en: "puffer jacket", jp: "中綿ジャケット" },
+    { en: "hooded coat", jp: "フード付きコート" },
   ],
   accessories: [
     { en: "round glasses", jp: "丸メガネ" },
@@ -129,12 +164,22 @@ const options = {
     { en: "headphones", jp: "ヘッドホン" },
     { en: "watch", jp: "腕時計" },
     { en: "no accessories", jp: "アクセサリーなし" },
+    { en: "scarf", jp: "スカーフ" },
+    { en: "bracelet", jp: "ブレスレット" },
+    { en: "beanie hat", jp: "ビーニー帽" },
+    { en: "backpack", jp: "バックパック" },
+    { en: "fingerless gloves", jp: "指なし手袋" },
   ],
   background: [
     { en: "minimal studio backdrop", jp: "最小限のスタジオ背景" },
     { en: "cozy room with large window", jp: "大きな窓のある居心地のよい部屋" },
     { en: "modern café interior", jp: "モダンなカフェの内装" },
     { en: "night city through window", jp: "窓越しの夜の街並み" },
+    { en: "library with tall shelves", jp: "高い本棚のある図書館" },
+    { en: "sunlit park", jp: "日差しのある公園" },
+    { en: "rain-soaked street at night", jp: "夜の雨に濡れた街路" },
+    { en: "mountain cabin interior", jp: "山小屋の室内" },
+    { en: "traditional tatami room", jp: "和室の畳" },
   ],
   bgDetails: [
     { en: "rain reflections on glass", jp: "ガラスの雨反射" },
@@ -143,6 +188,11 @@ const options = {
     { en: "indoor plants", jp: "観葉植物" },
     { en: "wooden desk", jp: "木製デスク" },
     { en: "retro posters", jp: "レトロポスター" },
+    { en: "hanging fairy lights", jp: "吊るされたフェアリーライト" },
+    { en: "steam rising from mug", jp: "マグから立ち上る湯気" },
+    { en: "floating dust in sunlight", jp: "日差しに舞う塵" },
+    { en: "stack of vinyl records", jp: "積み重なったレコード" },
+    { en: "old CRT monitor glow", jp: "古いCRTモニターの光" },
   ],
   activity: [
     { en: "studying and writing in a notebook", jp: "ノートに勉強・筆記" },
@@ -150,30 +200,51 @@ const options = {
     { en: "using a smartphone thoughtfully", jp: "スマホを思慮深く操作" },
     { en: "sipping coffee while thinking", jp: "コーヒーを飲み考え込む" },
     { en: "staring out of the window", jp: "窓の外を見つめる" },
+    { en: "typing on a laptop", jp: "ノートPCでタイピング" },
+    { en: "sketching in a notebook", jp: "ノートにスケッチする" },
+    { en: "playing acoustic guitar", jp: "アコースティックギターを弾く" },
+    { en: "painting on a canvas", jp: "キャンバスに絵を描く" },
+    { en: "stretching arms lazily", jp: "腕を伸ばして伸びをする" },
   ],
   shot: [
     { en: "medium shot", jp: "ミディアムショット" },
     { en: "medium close-up", jp: "ミディアムクローズアップ" },
     { en: "close-up", jp: "クローズアップ" },
+    { en: "long shot", jp: "ロングショット" },
+    { en: "wide shot", jp: "ワイドショット" },
+    { en: "full body shot", jp: "全身ショット" },
+    { en: "extreme close-up", jp: "エクストリームクローズアップ" },
+    { en: "over-the-shoulder shot", jp: "肩越しショット" },
   ],
   lighting: [
     { en: "soft desk lamp + ambient practicals", jp: "柔らかなデスクランプ＋室内の実用光" },
     { en: "cinematic low-key lighting", jp: "シネマ調のローキー照明" },
     { en: "sunset window light", jp: "夕暮れの窓明かり" },
+    { en: "bright overcast daylight", jp: "明るい曇天の昼光" },
+    { en: "neon sign lighting", jp: "ネオン看板の光" },
+    { en: "warm fireplace glow", jp: "暖炉の暖かい光" },
+    { en: "cool moonlight through window", jp: "窓から差し込む冷たい月光" },
+    { en: "dramatic chiaroscuro", jp: "劇的なキアロスクーロ" },
   ],
   mood: [
     { en: "calm and focused", jp: "穏やかで集中" },
     { en: "quietly reflective", jp: "静かに物思い" },
     { en: "warm and intimate", jp: "温かく親密" },
+    { en: "energetic and lively", jp: "エネルギッシュで活気がある" },
+    { en: "melancholic", jp: "物悲しい" },
+    { en: "nostalgic", jp: "懐かしい" },
+    { en: "mysterious", jp: "神秘的" },
+    { en: "joyful", jp: "喜びに満ちた" },
   ],
   style: [
     { en: "photorealistic, ultra-detailed, natural skin texture", jp: "超写実・精緻・自然な肌感" },
     { en: "cinematic color grading", jp: "シネマ調カラーグレーディング" },
-  ],
-  aspect: [
-    { en: "16:9", jp: "16:9" },
-    { en: "9:16", jp: "9:16" },
-    { en: "1:1", jp: "1:1" },
+    { en: "anime-inspired clean lines", jp: "アニメ風のクリーンな線" },
+    { en: "vintage film look", jp: "ビンテージフィルム風" },
+    { en: "soft film grain", jp: "柔らかなフィルムグレイン" },
+    { en: "washed-out 90s photo", jp: "色あせた90年代写真" },
+    { en: "VHS tape artifacts", jp: "VHSテープのノイズ" },
+    { en: "handheld camcorder style", jp: "ハンディカム風" },
   ],
 };
 
@@ -254,8 +325,6 @@ const defaultState = {
   styleExtra: "",
 
   // Output
-  aspect: "16:9",
-  aspectManual: "",
   extraEN: "",
   extraJP: "",
 };
@@ -304,7 +373,6 @@ function buildEnglishPrompt(state) {
     `Action: ${pref(state.activity, state.activityManual)}.`,
     `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}.`,
     `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}. Visual style: ${style}.`,
-    `Aspect: ${pref(state.aspect, state.aspectManual)}.`,
   ];
 
   const base = lines.join(" \n");
@@ -346,7 +414,6 @@ function buildJapanesePrompt(state) {
     `動作：${findJP(pref(state.activity, state.activityManual))}。`,
     `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}。`,
     `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}。ビジュアル：${styleArr.join("、")}。`,
-    `アスペクト比：${pref(state.aspect, state.aspectManual)}。`,
   ];
 
   const base = lines.join("\n");
@@ -365,19 +432,6 @@ export default function SoraPromptBuilder() {
   const [seed, setSeed] = useState(0);
   const { copy } = useClipboard();
 
-  // Import / share via URL
-  useEffect(() => {
-    const qs = new URLSearchParams(window.location.search);
-    const payload = qs.get("sora");
-    if (payload) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(atob(payload)));
-        // accept legacy keys too (e.g., backgroundExtra)
-        setState((prev) => ({ ...prev, ...parsed }));
-      } catch {}
-    }
-  }, []);
-
   const EN = useMemo(() => buildEnglishPrompt(state), [state]);
   const JP = useMemo(() => buildJapanesePrompt(state), [state]);
 
@@ -389,13 +443,6 @@ export default function SoraPromptBuilder() {
     a.download = `sora_prompt_${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  };
-
-  const shareURL = () => {
-    const payload = btoa(encodeURIComponent(JSON.stringify(state)));
-    const url = `${window.location.origin}${window.location.pathname}?sora=${payload}`;
-    navigator.clipboard.writeText(url);
-    alert("Sharable URL copied to clipboard.");
   };
 
   function randomPick(arr) { return arr[Math.floor(Math.random() * arr.length)].en; }
@@ -450,8 +497,6 @@ export default function SoraPromptBuilder() {
       moodManual: "",
       style: randomSubset(options.style, 1, 2),
       styleExtra: "",
-      aspect: randomPick(options.aspect),
-      aspectManual: "",
     }));
   };
 
@@ -487,9 +532,9 @@ export default function SoraPromptBuilder() {
     const tests = [];
     tests.push({ name: "defaultState defined", pass: typeof defaultState === "object" });
     const en = buildEnglishPrompt(defaultState);
-    tests.push({ name: "EN prompt contains Aspect", pass: /Aspect:\s/.test(en) });
+    tests.push({ name: "EN prompt mentions Camera", pass: /Camera:\s/.test(en) });
     const jp = buildJapanesePrompt(defaultState);
-    tests.push({ name: "JP prompt contains アスペクト比", pass: /アスペクト比：/.test(jp) });
+    tests.push({ name: "JP prompt mentions カメラ", pass: /カメラ：/.test(jp) });
     return tests;
   }, []);
 
@@ -505,7 +550,6 @@ export default function SoraPromptBuilder() {
             <Button onClick={randomize} title="Randomize"><Shuffle className="h-4 w-4" />Random</Button>
             <Button variant="subtle" onClick={reset} title="Reset"><RotateCcw className="h-4 w-4" />Reset</Button>
             <Button variant="ghost" onClick={exportJSON} title="Export JSON"><Download className="h-4 w-4" />Export</Button>
-            <Button variant="ghost" onClick={shareURL} title="Copy shareable URL"><FileText className="h-4 w-4" />Share URL</Button>
           </div>
         </div>
       </header>
@@ -677,16 +721,10 @@ export default function SoraPromptBuilder() {
             </CardContent>
           </Card>
 
-          {/* Output */}
+          {/* Output Notes */}
           <Card>
-            <CardHeader title="Output" subtitle="Aspect and free-form notes for both languages." />
-            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {field("Aspect ratio", (
-                <div className="space-y-2">
-                  <Select value={state.aspect} onChange={(v) => setState({ ...state, aspect: v })} options={toSelectOptions(options.aspect)} />
-                  <Input value={state.aspectManual} onChange={(v) => setState({ ...state, aspectManual: v })} placeholder="e.g. 2.39:1" />
-                </div>
-              ))}
+            <CardHeader title="Notes" subtitle="Free-form notes for both languages." />
+            <CardContent className="grid sm:grid-cols-2 gap-4">
               {field("Extra (EN) — manual", (
                 <Textarea value={state.extraEN} onChange={(v) => setState({ ...state, extraEN: v })} placeholder="Any extra English notes (e.g. 'light film grain, no bloom')" rows={3} />
               ))}
@@ -740,10 +778,9 @@ export default function SoraPromptBuilder() {
           </Card>
 
           <Card>
-            <CardHeader title="Utilities" subtitle="Download JSON or copy a shareable URL with all settings." />
+            <CardHeader title="Utilities" subtitle="Download JSON with current settings." />
             <CardContent className="flex flex-col gap-2">
               <Button variant="ghost" onClick={exportJSON}><Download className="h-4 w-4" />Download JSON</Button>
-              <Button variant="ghost" onClick={shareURL}><FileText className="h-4 w-4" />Copy Shareable URL</Button>
             </CardContent>
           </Card>
         </div>
