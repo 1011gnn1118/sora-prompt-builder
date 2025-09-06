@@ -63,6 +63,8 @@ const defaultState = {
   outerManual: "",
   accessories: ["no accessories"],
   accessoriesExtra: "",
+  fashionVibe: "fashionable",
+  fashionVibeManual: "",
 
   // Scene
   background: "cozy room with large window",
@@ -168,18 +170,20 @@ function buildEnglishPrompt(state) {
   const outfit = dress
     ? `${dress}${outerText}${accText}`
     : `${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}`;
+  const fashionVibe = pref(state.fashionVibe, state.fashionVibeManual);
 
   const lines = [
     `A ${subject} subject with ${face}.`,
     `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
     `Outfit: ${outfit}.`,
+    fashionVibe ? `Fashion vibe: ${fashionVibe}.` : "",
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
     `Action: ${pref(state.activity, state.activityManual)}${actionRepetition}${state.forbidEyeContact ? ", never looking toward the camera" : ""}.`,
     `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
     `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}${moodExtra}. Visual style: ${style}.`,
   ];
 
-  const base = lines.join(" \n");
+  const base = lines.filter(Boolean).join(" \n");
   const extra = state.extraEN?.trim() ? `\nNotes: ${state.extraEN.trim()}` : "";
   return (
     base +
@@ -230,18 +234,20 @@ function buildJapanesePrompt(state) {
   const outfitJP = dressJP
     ? `${dressJP}${outerText}${accText}`
     : `${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}`;
+  const fashionJP = pref(state.fashionVibe, state.fashionVibeManual);
 
   const lines = [
     subjectLine,
     `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
     `服装：${outfitJP}。`,
+    fashionJP ? `ファッションの雰囲気：${findJP(fashionJP)}。` : "",
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
     `動作：${findJP(pref(state.activity, state.activityManual))}${actionRepetition}${state.forbidEyeContact ? "。視線は対象に固定され、カメラを見ることはない" : ""}。`,
     `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
     `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}${moodExtra}。ビジュアル：${styleArr.join("、")}。`,
   ];
 
-  const base = lines.join("\n");
+  const base = lines.filter(Boolean).join("\n");
   const extra = state.extraJP?.trim() ? `\n備考: ${state.extraJP.trim()}` : "";
   return (
     base +
@@ -305,6 +311,8 @@ export default function SoraPromptBuilder() {
       outerManual: "",
       accessories: randomSubset(options.accessories, 1, 2),
       accessoriesExtra: "",
+      fashionVibe: randomPick(options.fashionVibes),
+      fashionVibeManual: "",
       background: randomPick(options.background),
       backgroundManual: "",
       bgDetails: randomSubset(options.bgDetails, 1, 3),
@@ -484,6 +492,12 @@ export default function SoraPromptBuilder() {
                 <div className="space-y-2">
                   {multiPills(state.accessories, (vals) => setState({ ...state, accessories: vals }), options.accessories)}
                   <Input value={state.accessoriesExtra} onChange={(v) => setState({ ...state, accessoriesExtra: v })} placeholder="e.g. silver ring, hair tie" />
+                </div>
+              ))}
+              {field("Fashion vibe", (
+                <div className="space-y-2">
+                  <Select value={state.fashionVibe} onChange={(v) => setState({ ...state, fashionVibe: v })} options={toSelectOptions(options.fashionVibes)} />
+                  <Input value={state.fashionVibeManual} onChange={(v) => setState({ ...state, fashionVibeManual: v })} placeholder="e.g. urban casual chic" />
                 </div>
               ))}
             </CardContent>
