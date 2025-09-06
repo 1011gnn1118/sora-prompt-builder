@@ -364,15 +364,17 @@ function buildEnglishPrompt(state) {
   if (state.styleExtra?.trim()) styleList.push(state.styleExtra.trim());
   const style = styleList.join(", ");
   const aperture = apertureFromDof(state.dofStrength);
+  const focus = state.focusSubject && state.focusSubject.trim();
+  const focusText = focus ? `, focus on ${focus}` : "";
 
   const lines = [
     `A ${pref(state.age, state.ageManual)} ${pref(state.gender, state.genderManual)} ${pref(state.ethnicity, state.ethnicityManual)} subject with ${face}.`,
     `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
     `Outfit: ${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}.`,
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
-    `Action: ${pref(state.activity, state.activityManual)}.`,
-    `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}.`,
-    `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}. Visual style: ${style}.`,
+    `Action: ${pref(state.activity, state.activityManual)}, captured in a still, unchanging frame.`,
+    `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}${focusText}, static camera, no zoom, no panning, locked-off tripod shot, camera remains perfectly still throughout, like a fixed surveillance camera, tripod shot, no handheld shake.`,
+    `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}, documentary-style still shot, without cinematic camera movement. Visual style: ${style}.`,
   ];
 
   const base = lines.join(" \n");
@@ -405,15 +407,17 @@ function buildJapanesePrompt(state) {
   const styleArr = state.style.map(findJP).filter(Boolean);
   if (state.styleExtra?.trim()) styleArr.push(state.styleExtra.trim());
   const aperture = apertureFromDof(state.dofStrength);
+  const focusJP = state.focusSubject && state.focusSubject.trim();
+  const focusTextJP = focusJP ? `、フォーカスは${focusJP}` : "";
 
   const lines = [
     `${findJP(pref(state.age, state.ageManual))}の${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`,
     `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
     `服装：${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}。`,
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
-    `動作：${findJP(pref(state.activity, state.activityManual))}。`,
-    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}。`,
-    `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}。ビジュアル：${styleArr.join("、")}。`,
+    `動作：${findJP(pref(state.activity, state.activityManual))}。静止した変化のないフレームで捉える。`,
+    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}${focusTextJP}、静止したカメラ、ズームやパンなし、固定された三脚ショット、カメラは終始完全に静止、固定監視カメラのように、三脚ショットで手持ちの揺れなし。`,
+    `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}、ドキュメンタリー風の静止ショット、映画的なカメラ動作なし。ビジュアル：${styleArr.join("、")}。`,
   ];
 
   const base = lines.join("\n");
