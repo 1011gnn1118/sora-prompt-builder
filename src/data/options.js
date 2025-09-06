@@ -127,6 +127,17 @@ export const options = {
     { en: "backpack", jp: "バックパック" },
     { en: "fingerless gloves", jp: "指なし手袋" },
   ],
+  fashionVibes: [
+    { en: "fashionable", jp: "ファッショナブル" },
+    { en: "stylish", jp: "スタイリッシュ" },
+    { en: "chic", jp: "シック" },
+    { en: "elegant casual", jp: "エレガントカジュアル" },
+    { en: "sophisticated", jp: "洗練された" },
+    { en: "youthful", jp: "若々しい" },
+    { en: "street style", jp: "ストリートスタイル" },
+    { en: "urban casual", jp: "都会的カジュアル" },
+    { en: "magazine style", jp: "雑誌風スタイル" },
+  ],
   background: [
     { en: "minimal studio backdrop", jp: "最小限のスタジオ背景" },
     { en: "cozy room with large window", jp: "大きな窓のある居心地のよい部屋" },
