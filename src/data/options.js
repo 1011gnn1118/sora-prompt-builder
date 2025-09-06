@@ -90,6 +90,12 @@ export const options = {
     { en: "pencil skirt", jp: "タイトスカート" },
     { en: "flowy maxi skirt", jp: "ゆったりしたマキシスカート" },
     { en: "ripped jeans", jp: "ダメージジーンズ" },
+    { en: "mini skirt", jp: "ミニスカート" },
+    { en: "pleated mini skirt", jp: "プリーツミニスカート" },
+    { en: "denim shorts", jp: "デニムショートパンツ" },
+    { en: "high-waist shorts", jp: "ハイウエストショーツ" },
+    { en: "slim fit trousers", jp: "スリムフィットパンツ" },
+    { en: "leggings with long top", jp: "ロングトップス＋レギンス" },
   ],
   outer: [
     { en: "", jp: "" },
