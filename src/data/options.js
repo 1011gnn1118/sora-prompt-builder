@@ -97,6 +97,13 @@ export const options = {
     { en: "slim fit trousers", jp: "スリムフィットパンツ" },
     { en: "leggings with long top", jp: "ロングトップス＋レギンス" },
   ],
+  fashionDresses: [
+    { en: "slip dress", jp: "スリップドレス" },
+    { en: "sundress", jp: "サマードレス" },
+    { en: "backless dress", jp: "背中の開いたドレス" },
+    { en: "sheer layered dress", jp: "透け感のあるレイヤードドレス" },
+    { en: "wrap dress", jp: "ラップドレス" },
+  ],
   outer: [
     { en: "", jp: "" },
     { en: "tailored blazer", jp: "テーラードブレザー" },

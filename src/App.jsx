@@ -57,6 +57,8 @@ const defaultState = {
   topsManual: "",
   bottoms: "dark trousers",
   bottomsManual: "",
+  dress: "",
+  dressManual: "",
   outer: "",
   outerManual: "",
   accessories: ["no accessories"],
@@ -162,10 +164,15 @@ function buildEnglishPrompt(state) {
   if (ethnicity) subjectParts.push(ethnicity);
   const subject = subjectParts.join(" ");
 
+  const dress = pref(state.dress, state.dressManual);
+  const outfit = dress
+    ? `${dress}${outerText}${accText}`
+    : `${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}`;
+
   const lines = [
     `A ${subject} subject with ${face}.`,
     `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
-    `Outfit: ${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}.`,
+    `Outfit: ${outfit}.`,
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
     `Action: ${pref(state.activity, state.activityManual)}${actionRepetition}${state.forbidEyeContact ? ", never looking toward the camera" : ""}.`,
     `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
@@ -217,10 +224,17 @@ function buildJapanesePrompt(state) {
   const ageJP = pref(state.age, state.ageManual);
   const subjectLine = `${ageJP ? findJP(ageJP) + "の" : ""}${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`;
 
+  const dressJP = pref(state.dress, state.dressManual)
+    ? findJP(pref(state.dress, state.dressManual))
+    : "";
+  const outfitJP = dressJP
+    ? `${dressJP}${outerText}${accText}`
+    : `${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}`;
+
   const lines = [
     subjectLine,
     `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
-    `服装：${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}。`,
+    `服装：${outfitJP}。`,
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
     `動作：${findJP(pref(state.activity, state.activityManual))}${actionRepetition}${state.forbidEyeContact ? "。視線は対象に固定され、カメラを見ることはない" : ""}。`,
     `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
@@ -265,6 +279,7 @@ export default function SoraPromptBuilder() {
 
   const randomize = () => {
     setSeed((s) => s + 1);
+    const useDress = Math.random() < 0.5;
     setState((prev) => ({
       ...prev,
       age: randomPick(options.age),
@@ -280,9 +295,11 @@ export default function SoraPromptBuilder() {
       makeupManual: "",
       eyeColor: randomPick(options.eyeColor),
       eyeColorManual: "",
-      tops: randomPick(options.tops),
+      dress: useDress ? randomPick(options.fashionDresses) : "",
+      dressManual: "",
+      tops: useDress ? "" : randomPick(options.tops),
       topsManual: "",
-      bottoms: randomPick(options.bottoms),
+      bottoms: useDress ? "" : randomPick(options.bottoms),
       bottomsManual: "",
       outer: randomPick(options.outer),
       outerManual: "",
@@ -356,6 +373,8 @@ export default function SoraPromptBuilder() {
     tests.push({ name: "Full body guarantee triggers (EN)", pass: buildEnglishPrompt({ ...defaultState, shot: "full body shot" }).includes("fully visible from head to toe") });
     tests.push({ name: "Aperture mapping works", pass: /^f\/[0-9]+\.[0-9]$/.test(apertureFromDof(defaultState.dofStrength)) });
     tests.push({ name: "Lighting field composes", pass: buildEnglishPrompt({ ...defaultState, lighting: "neon sign lighting" }).includes("Lighting: neon sign lighting") });
+    tests.push({ name: "Dress field composes (EN)", pass: buildEnglishPrompt({ ...defaultState, dress: "sundress", tops: "", bottoms: "" }).includes("Outfit: sundress") });
+    tests.push({ name: "Dress field composes (JP)", pass: buildJapanesePrompt({ ...defaultState, dress: "sundress", tops: "", bottoms: "" }).includes("服装：サマードレス") });
     return tests;
   }, []);
 
@@ -439,6 +458,20 @@ export default function SoraPromptBuilder() {
                 <div className="space-y-2">
                   <Select value={state.bottoms} onChange={(v) => setState({ ...state, bottoms: v })} options={toSelectOptions(options.bottoms)} />
                   <Input value={state.bottomsManual} onChange={(v) => setState({ ...state, bottomsManual: v })} placeholder="e.g. sleek high-waist mini skirt / tapered trousers" />
+                </div>
+              ))}
+              {field("Dress", (
+                <div className="space-y-2">
+                  <Select
+                    value={state.dress}
+                    onChange={(v) => setState({ ...state, dress: v })}
+                    options={[{ value: "", label: "" }, ...toSelectOptions(options.fashionDresses)]}
+                  />
+                  <Input
+                    value={state.dressManual}
+                    onChange={(v) => setState({ ...state, dressManual: v })}
+                    placeholder="e.g. floral midi dress"
+                  />
                 </div>
               ))}
               {field("Outer", (
