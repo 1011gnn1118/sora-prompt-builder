@@ -38,10 +38,9 @@ function useClipboard() {
 // ===== DEFAULT STATE (extended for candid & static camera) =====
 const defaultState = {
   // Character
-  age: "young adult",
+  age: "",
   ageManual: "",
   gender: "female",
-  genderManual: "",
   ethnicity: "Japanese",
   ethnicityManual: "",
   face: ["natural features", "soft oval face", "light freckles"],
@@ -154,8 +153,17 @@ function buildEnglishPrompt(state) {
   const fullBodyGuarantee = state.shot.includes("full body") ? ", the entire figure fully visible from head to toe, never cropped" : "";
   const actionRepetition = ", the motion is clearly captured and repeated continuously as a central sustained action";
 
+  const subjectParts = [];
+  const age = pref(state.age, state.ageManual);
+  const gender = pref(state.gender, state.genderManual);
+  const ethnicity = pref(state.ethnicity, state.ethnicityManual);
+  if (age) subjectParts.push(age);
+  if (gender) subjectParts.push(gender);
+  if (ethnicity) subjectParts.push(ethnicity);
+  const subject = subjectParts.join(" ");
+
   const lines = [
-    `A ${pref(state.age, state.ageManual)} ${pref(state.gender, state.genderManual)} ${pref(state.ethnicity, state.ethnicityManual)} subject with ${face}.`,
+    `A ${subject} subject with ${face}.`,
     `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
     `Outfit: ${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}.`,
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
@@ -206,8 +214,11 @@ function buildJapanesePrompt(state) {
   const fullBodyGuarantee = state.shot.includes("full body") ? "、頭からつま先まで完全に写っており、クロップされない" : "";
   const actionRepetition = "。動作は明確に画面に収められ、繰り返し持続的に主要な要素として強調される";
 
+  const ageJP = pref(state.age, state.ageManual);
+  const subjectLine = `${ageJP ? findJP(ageJP) + "の" : ""}${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`;
+
   const lines = [
-    `${findJP(pref(state.age, state.ageManual))}の${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`,
+    subjectLine,
     `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
     `服装：${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}。`,
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
@@ -258,8 +269,7 @@ export default function SoraPromptBuilder() {
       ...prev,
       age: randomPick(options.age),
       ageManual: "",
-      gender: randomPick(options.gender),
-      genderManual: "",
+      gender: "female",
       ethnicity: randomPick(options.ethnicity),
       ethnicityManual: "",
       face: randomSubset(options.face, 1, 3),
@@ -374,14 +384,8 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Age", (
                 <div className="space-y-2">
-                  <Select value={state.age} onChange={(v) => setState({ ...state, age: v })} options={toSelectOptions(options.age)} />
+                  <Select value={state.age} onChange={(v) => setState({ ...state, age: v })} options={[{ value: "", label: "" }, ...toSelectOptions(options.age)]} />
                   <Input value={state.ageManual} onChange={(v) => setState({ ...state, ageManual: v })} placeholder="e.g. early 20s" />
-                </div>
-              ))}
-              {field("Gender", (
-                <div className="space-y-2">
-                  <Select value={state.gender} onChange={(v) => setState({ ...state, gender: v })} options={toSelectOptions(options.gender)} />
-                  <Input value={state.genderManual} onChange={(v) => setState({ ...state, genderManual: v })} placeholder="e.g. androgynous female" />
                 </div>
               ))}
               {field("Ethnicity / Vibe", (

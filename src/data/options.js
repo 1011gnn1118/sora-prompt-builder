@@ -3,9 +3,6 @@ export const options = {
     { en: "teen", jp: "10代" },
     { en: "young adult", jp: "若い大人" },
     { en: "adult", jp: "大人" },
-    { en: "mature", jp: "成熟した大人" },
-    { en: "child", jp: "子供" },
-    { en: "senior", jp: "高齢者" },
   ],
   gender: [
     { en: "female", jp: "女性" },
