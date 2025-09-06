@@ -1,20 +1,23 @@
 import React, { useMemo, useState } from "react";
-import { Copy, Shuffle, RotateCcw, Download, Languages, Wand2, ShieldCheck } from "lucide-react";
+import { Copy, Shuffle, RotateCcw, Download, Languages, Wand2, ShieldCheck, CameraOff, EyeOff, Sliders } from "lucide-react";
 
 // ===== UI PRIMITIVES (no external UI deps) =====
 const Card = ({ children, className = "" }) => (
   <div className={`rounded-2xl shadow-sm border border-gray-200 bg-white ${className}`}>{children}</div>
 );
-const CardHeader = ({ title, subtitle }) => (
-  <div className="px-5 pt-5 pb-3 border-b">
-    <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
-    {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+const CardHeader = ({ title, subtitle, right }) => (
+  <div className="px-5 pt-5 pb-3 border-b flex items-start justify-between gap-3">
+    <div>
+      <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+      {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+    </div>
+    {right}
   </div>
 );
 const CardContent = ({ children, className = "" }) => (
   <div className={`px-5 py-4 ${className}`}>{children}</div>
 );
-const Button = ({ children, onClick, className = "", variant = "default", title }) => {
+const Button = ({ children, onClick, className = "", variant = "default", title, type = "button" }) => {
   const base = "inline-flex items-center gap-2 rounded-2xl px-3.5 py-2.5 text-sm font-medium transition border focus:outline-none";
   const styles = {
     default: "bg-black text-white border-black hover:opacity-90",
@@ -22,7 +25,7 @@ const Button = ({ children, onClick, className = "", variant = "default", title 
     subtle: "bg-gray-900/5 text-gray-800 border-gray-200 hover:bg-gray-900/10",
   };
   return (
-    <button title={title} onClick={onClick} className={`${base} ${styles[variant]} ${className}`}>
+    <button type={type} title={title} onClick={onClick} className={`${base} ${styles[variant]} ${className}`}>
       {children}
     </button>
   );
@@ -270,7 +273,7 @@ function findJP(en) {
   return en;
 }
 
-// ===== DEFAULT STATE (fixes ReferenceError) =====
+// ===== DEFAULT STATE (extended for candid & static camera) =====
 const defaultState = {
   // Character
   age: "young adult",
@@ -288,7 +291,7 @@ const defaultState = {
   eyeColor: "dark brown",
   eyeColorManual: "",
 
-  // Outfit (each has manual override)
+  // Outfit
   tops: "fitted light gray long-sleeve, slightly open neckline",
   topsManual: "",
   bottoms: "dark trousers",
@@ -316,6 +319,12 @@ const defaultState = {
   dofStrength: 35, // 0–100
   focusSubject: "eyes",
 
+  // Movement & candid controls
+  staticCamera: true, // lock camera (no zoom/pan)
+  tripod: true, // locked-off tripod style
+  forbidEyeContact: false, // never look toward camera
+  candidMode: "none", // "none" | "far" | "close"
+
   // Lighting / Mood / Style
   lighting: "soft desk lamp + ambient practicals",
   lightingManual: "",
@@ -335,8 +344,8 @@ function apertureFromDof(dof) {
   const f = Math.round(1.2 + (Math.max(0, Math.min(100, dof)) / 100) * 10 * 10) / 10;
   return `f/${f.toFixed(1)}`;
 }
-function pref(value, manual, legacy) {
-  const candidate = (manual && String(manual).trim()) || (legacy && String(legacy).trim());
+function pref(value, manual) {
+  const candidate = (manual && String(manual).trim()) || (value && String(value).trim());
   return candidate ? candidate : value;
 }
 
@@ -364,17 +373,33 @@ function buildEnglishPrompt(state) {
   if (state.styleExtra?.trim()) styleList.push(state.styleExtra.trim());
   const style = styleList.join(", ");
   const aperture = apertureFromDof(state.dofStrength);
-  const focus = state.focusSubject && state.focusSubject.trim();
-  const focusText = focus ? `, focus on ${focus}` : "";
+
+  // Camera motion & candid strings
+  const staticStr = state.staticCamera
+    ? ", static locked-off tripod shot, no zoom, no panning, no dolly, no push-in, absolutely no handheld shake or micro jitter, zero camera motion of any kind; composition never changes, like CCTV or a still photograph"
+    : "";
+  const tripodStr = state.tripod && !state.staticCamera ? ", tripod shot (no handheld shake)" : "";
+  const forbidEyeStr = state.forbidEyeContact ? ", excluding any direct eye contact with the viewer" : "";
+  let candidStr = "";
+  if (state.candidMode === "far") {
+    candidStr = ", captured documentary-style from a discreet distance as an unaware candid moment";
+  } else if (state.candidMode === "close") {
+    candidStr = ", candid close proximity as if peeking into her private space, unposed and unaware";
+  }
+
+  const moodExtra = state.candidMode !== "none" ? ", candid, natural, unposed" : "";
+
+  const fullBodyGuarantee = state.shot.includes("full body") ? ", the entire figure fully visible from head to toe, never cropped" : "";
+  const actionRepetition = ", the motion is clearly captured and repeated continuously as a central sustained action";
 
   const lines = [
     `A ${pref(state.age, state.ageManual)} ${pref(state.gender, state.genderManual)} ${pref(state.ethnicity, state.ethnicityManual)} subject with ${face}.`,
     `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
     `Outfit: ${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}${outerText}${accText}.`,
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
-    `Action: ${pref(state.activity, state.activityManual)}, captured in a still, unchanging frame.`,
-    `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}${focusText}, static camera, no zoom, no panning, locked-off tripod shot, camera remains perfectly still throughout, like a fixed surveillance camera, tripod shot, no handheld shake.`,
-    `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}, documentary-style still shot, without cinematic camera movement. Visual style: ${style}.`,
+    `Action: ${pref(state.activity, state.activityManual)}${actionRepetition}${state.forbidEyeContact ? ", never looking toward the camera" : ""}.`,
+    `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
+    `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}${moodExtra}. Visual style: ${style}.`,
   ];
 
   const base = lines.join(" \n");
@@ -407,21 +432,30 @@ function buildJapanesePrompt(state) {
   const styleArr = state.style.map(findJP).filter(Boolean);
   if (state.styleExtra?.trim()) styleArr.push(state.styleExtra.trim());
   const aperture = apertureFromDof(state.dofStrength);
-  const focusJP = state.focusSubject && state.focusSubject.trim();
-  const focusTextJP = focusJP ? `、フォーカスは${focusJP}` : "";
+
+  const staticStr = state.staticCamera ? "、カメラは固定 - 三脚使用。ズーム・パン・ドリー・プッシュイン・手ブレ・微揺れ一切なし。構図は終始不変でCCTVや静止写真のよう" : "";
+  const tripodStr = state.tripod && !state.staticCamera ? "、三脚で手ブレなし" : "";
+  const forbidEyeStr = state.forbidEyeContact ? "、カメラ目線は一切なし" : "";
+  let candidStr = "";
+  if (state.candidMode === "far") candidStr = "、離れた位置からのドキュメンタリー風の観察ショット";
+  else if (state.candidMode === "close") candidStr = "、至近距離から覗き見るようなアンポーズの密着ショット";
+  const moodExtra = state.candidMode !== "none" ? "、スナップ的・自然体・演出感のない雰囲気" : "";
+
+  const fullBodyGuarantee = state.shot.includes("full body") ? "、頭からつま先まで完全に写っており、クロップされない" : "";
+  const actionRepetition = "。動作は明確に画面に収められ、繰り返し持続的に主要な要素として強調される";
 
   const lines = [
     `${findJP(pref(state.age, state.ageManual))}の${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`,
     `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
     `服装：${findJP(pref(state.tops, state.topsManual))}、${findJP(pref(state.bottoms, state.bottomsManual))}${outerText}${accText}。`,
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
-    `動作：${findJP(pref(state.activity, state.activityManual))}。静止した変化のないフレームで捉える。`,
-    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}${focusTextJP}、静止したカメラ、ズームやパンなし、固定された三脚ショット、カメラは終始完全に静止、固定監視カメラのように、三脚ショットで手持ちの揺れなし。`,
-    `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}、ドキュメンタリー風の静止ショット、映画的なカメラ動作なし。ビジュアル：${styleArr.join("、")}。`,
+    `動作：${findJP(pref(state.activity, state.activityManual))}${actionRepetition}${state.forbidEyeContact ? "。視線は対象に固定され、カメラを見ることはない" : ""}。`,
+    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
+    `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}${moodExtra}。ビジュアル：${styleArr.join("、")}。`,
   ];
 
   const base = lines.join("\n");
-  const extra = state.extraJP?.trim() ? `\n備考：${state.extraJP.trim()}` : "";
+  const extra = state.extraJP?.trim() ? `\n備考: ${state.extraJP.trim()}` : "";
   return (
     base +
     extra +
@@ -431,7 +465,6 @@ function buildJapanesePrompt(state) {
 
 // ===== MAIN COMPONENT =====
 export default function SoraPromptBuilder() {
-  // Default state is now defined above (fixes ReferenceError)
   const [state, setState] = useState(defaultState);
   const [seed, setSeed] = useState(0);
   const { copy } = useClipboard();
@@ -501,6 +534,7 @@ export default function SoraPromptBuilder() {
       moodManual: "",
       style: randomSubset(options.style, 1, 2),
       styleExtra: "",
+      // keep candid/static settings as-is so UX remains predictable
     }));
   };
 
@@ -531,16 +565,90 @@ export default function SoraPromptBuilder() {
     </div>
   );
 
-  // Simple self-tests (smoke tests) to ensure key pieces work
+  // Self-tests to catch regressions (kept + expanded)
   const selfTests = useMemo(() => {
     const tests = [];
     tests.push({ name: "defaultState defined", pass: typeof defaultState === "object" });
     const en = buildEnglishPrompt(defaultState);
-    tests.push({ name: "EN prompt mentions Camera", pass: /Camera:\s/.test(en) });
+    tests.push({ name: "EN prompt mentions Camera", pass: /Camera:\\s/.test(en) });
     const jp = buildJapanesePrompt(defaultState);
     tests.push({ name: "JP prompt mentions カメラ", pass: /カメラ：/.test(jp) });
+    tests.push({ name: "Static camera phrase present (EN)", pass: buildEnglishPrompt({ ...defaultState, staticCamera: true }).includes("static locked-off tripod") });
+    tests.push({ name: "Absolute no-movement present (EN)", pass: buildEnglishPrompt({ ...defaultState, staticCamera: true }).includes("no push-in") });
+    tests.push({ name: "Candid FAR injects wording (EN)", pass: buildEnglishPrompt({ ...defaultState, candidMode: "far" }).includes("documentary-style") });
+    tests.push({ name: "Candid CLOSE injects wording (EN)", pass: buildEnglishPrompt({ ...defaultState, candidMode: "close" }).includes("peeking into her private space") });
+    tests.push({ name: "JP static phrase present", pass: buildJapanesePrompt({ ...defaultState, staticCamera: true }).includes("ズーム・パン・ドリー・プッシュイン・手ブレ・微揺れ一切なし") });
+    tests.push({ name: "Forbid eye contact injects (EN)", pass: buildEnglishPrompt({ ...defaultState, forbidEyeContact: true }).includes("excluding any direct eye contact") });
+    tests.push({ name: "Action repetition phrase present (EN)", pass: buildEnglishPrompt({ ...defaultState, activity: "stretching arms lazily" }).includes("repeated continuously") });
+    tests.push({ name: "Action repetition phrase present (JP)", pass: buildJapanesePrompt({ ...defaultState, activity: "stretching arms lazily" }).includes("繰り返し持続的に") });
+    tests.push({ name: "Full body guarantee triggers (EN)", pass: buildEnglishPrompt({ ...defaultState, shot: "full body shot" }).includes("fully visible from head to toe") });
+    tests.push({ name: "Aperture mapping works", pass: /^f\/[0-9]+\.[0-9]$/.test(apertureFromDof(defaultState.dofStrength)) });
+    tests.push({ name: "Lighting field composes", pass: buildEnglishPrompt({ ...defaultState, lighting: "neon sign lighting" }).includes("Lighting: neon sign lighting") });
     return tests;
   }, []);
+
+  // Generic presets - not limited to any genre
+  const applyPreset = (key) => {
+    const baseScene = {
+      background: "cozy room with large window",
+      bgDetails: ["hanging fairy lights", "stack of vinyl records", "neon glow spill"],
+      accessories: ["headphones", "thin necklace"],
+      activity: "reading a paperback",
+      focusSubject: "eyes and the open book",
+    };
+
+    const commonCameraFar = {
+      shot: "medium-long shot",
+      focalLength: 85,
+      staticCamera: true,
+      tripod: true,
+      forbidEyeContact: true,
+      candidMode: "far",
+    };
+    const commonCameraClose = {
+      shot: "close-up",
+      focalLength: 50,
+      staticCamera: true,
+      tripod: true,
+      forbidEyeContact: true,
+      candidMode: "close",
+    };
+
+    const glam = {
+      makeup: "soft glam",
+      tops: "silk blouse",
+      topsManual: "silky pastel blouse with a deep V-neckline that subtly reveals her cleavage",
+      bottoms: "pencil skirt",
+      bottomsManual: "sleek high-waist mini skirt",
+      style: ["cinematic color grading", "soft film grain"],
+      lighting: "neon sign lighting",
+      mood: "nostalgic",
+      extraEN: "Glamorous yet tasteful music-video vibe.",
+      extraJP: "華やかだが上品な雰囲気のミュージックビデオ感。",
+    };
+
+    const cozy = {
+      makeup: "natural makeup",
+      tops: "oversized knit sweater",
+      topsManual: "oversized pastel off-shoulder knit sweater that reveals her collarbone",
+      bottoms: "pleated skirt",
+      bottomsManual: "stylish plaid mini skirt",
+      style: ["cinematic color grading", "soft film grain"],
+      lighting: "soft desk lamp + ambient practicals",
+      mood: "warm and intimate",
+      extraEN: "Approachable, relaxed, candid vibe.",
+      extraJP: "親しみやすくリラックスしたスナップ感。",
+    };
+
+    const presets = {
+      "glam-far": { ...baseScene, ...glam, ...commonCameraFar },
+      "glam-close": { ...baseScene, ...glam, ...commonCameraClose },
+      "cozy-far": { ...baseScene, ...cozy, ...commonCameraFar },
+      "cozy-close": { ...baseScene, ...cozy, ...commonCameraClose },
+    };
+
+    setState((prev) => ({ ...prev, ...presets[key] }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -561,9 +669,20 @@ export default function SoraPromptBuilder() {
       <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* LEFT: Controls */}
         <div className="xl:col-span-2 space-y-6">
+          {/* Generic presets */}
+          <Card>
+            <CardHeader title="Presets (Candid & Static)" subtitle="Glam / Cozy × Far / Close with candid and static camera baked in." right={<Sliders className="h-5 w-5 text-gray-500" />} />
+            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <Button variant="ghost" onClick={() => applyPreset("glam-far")}>Glam × Far</Button>
+              <Button variant="ghost" onClick={() => applyPreset("glam-close")}>Glam × Close</Button>
+              <Button variant="ghost" onClick={() => applyPreset("cozy-far")}>Cozy × Far</Button>
+              <Button variant="ghost" onClick={() => applyPreset("cozy-close")}>Cozy × Close</Button>
+            </CardContent>
+          </Card>
+
           {/* Character */}
           <Card>
-            <CardHeader title="Character" subtitle="Fine-grained controls (no height/weight). Add freckles, moles, dimples, etc." />
+            <CardHeader title="Character" subtitle="Fine-grained controls - add freckles, moles, dimples, etc." />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Age", (
                 <div className="space-y-2">
@@ -616,18 +735,18 @@ export default function SoraPromptBuilder() {
 
           {/* Outfit */}
           <Card>
-            <CardHeader title="Outfit" subtitle="Clothing & accessories. Each field allows manual override (e.g. custom text)." />
+            <CardHeader title="Outfit" subtitle="Clothing & accessories. Each field allows manual override - custom text supported." />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Tops", (
                 <div className="space-y-2">
                   <Select value={state.tops} onChange={(v) => setState({ ...state, tops: v })} options={toSelectOptions(options.tops)} />
-                  <Input value={state.topsManual} onChange={(v) => setState({ ...state, topsManual: v })} placeholder="e.g. light gray blouse with open neckline" />
+                  <Input value={state.topsManual} onChange={(v) => setState({ ...state, topsManual: v })} placeholder="e.g. silky blouse with a deep V-neckline (subtle)" />
                 </div>
               ))}
               {field("Bottoms", (
                 <div className="space-y-2">
                   <Select value={state.bottoms} onChange={(v) => setState({ ...state, bottoms: v })} options={toSelectOptions(options.bottoms)} />
-                  <Input value={state.bottomsManual} onChange={(v) => setState({ ...state, bottomsManual: v })} placeholder="e.g. tapered dark trousers" />
+                  <Input value={state.bottomsManual} onChange={(v) => setState({ ...state, bottomsManual: v })} placeholder="e.g. sleek high-waist mini skirt / tapered trousers" />
                 </div>
               ))}
               {field("Outer", (
@@ -667,7 +786,7 @@ export default function SoraPromptBuilder() {
 
           {/* Action */}
           <Card>
-            <CardHeader title="Action" subtitle="What the subject is doing (presets + manual)." />
+            <CardHeader title="Action" subtitle="What the subject is doing - presets and manual." />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Activity", (
                 <div className="space-y-2">
@@ -680,7 +799,7 @@ export default function SoraPromptBuilder() {
 
           {/* Camera */}
           <Card>
-            <CardHeader title="Camera" subtitle="Shot, focal length, depth-of-field as a numeric control." />
+            <CardHeader title="Camera" subtitle="Shot, focal length, depth-of-field, and movement or candid controls." right={<CameraOff className="h-5 w-5 text-gray-500" />} />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Shot type", (
                 <div className="space-y-2">
@@ -693,16 +812,34 @@ export default function SoraPromptBuilder() {
               ), "Typical portrait: 50–85mm" )}
               {field("Depth of field (0–100)", (
                 <Input type="number" value={state.dofStrength} onChange={(v) => setState({ ...state, dofStrength: Math.max(0, Math.min(100, v)) })} min={0} max={100} step={1} />
-              ), "Higher = deeper focus (mapped to aperture)." )}
+              ), "Higher = deeper focus - mapped to aperture" )}
               {field("Focus subject (manual)", (
                 <Input value={state.focusSubject} onChange={(v) => setState({ ...state, focusSubject: v })} placeholder="e.g. eyes / eyelashes / face / hands / book" />
               ))}
+              {/* Movement toggles */}
+              <div className="flex flex-col gap-3">
+                <Toggle checked={state.staticCamera} onChange={(v) => setState({ ...state, staticCamera: v })} label="Static camera - no zoom or pan" />
+                <Toggle checked={state.tripod} onChange={(v) => setState({ ...state, tripod: v })} label="Locked-off tripod - no handheld shake" />
+                <Toggle checked={state.forbidEyeContact} onChange={(v) => setState({ ...state, forbidEyeContact: v })} label={<span className="inline-flex items-center gap-1"><EyeOff className="h-3.5 w-3.5"/>Forbid direct eye contact</span>} />
+              </div>
+              {/* Candid selector */}
+              {field("Candid mode", (
+                <Select
+                  value={state.candidMode}
+                  onChange={(v) => setState({ ...state, candidMode: v })}
+                  options={[
+                    { value: "none", label: "none" },
+                    { value: "far", label: "far - documentary observe" },
+                    { value: "close", label: "close - peeking proximity" },
+                  ]}
+                />
+              ), "Choose how unaware is conveyed." )}
             </CardContent>
           </Card>
 
           {/* Lighting & Mood */}
           <Card>
-            <CardHeader title="Lighting / Mood / Style" subtitle="Cinematic feel without a color palette field (excluded per request)." />
+            <CardHeader title="Lighting / Mood / Style" subtitle="Cinematic feel without a color palette field." />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Lighting", (
                 <div className="space-y-2">
@@ -729,11 +866,11 @@ export default function SoraPromptBuilder() {
           <Card>
             <CardHeader title="Notes" subtitle="Free-form notes for both languages." />
             <CardContent className="grid sm:grid-cols-2 gap-4">
-              {field("Extra (EN) — manual", (
-                <Textarea value={state.extraEN} onChange={(v) => setState({ ...state, extraEN: v })} placeholder="Any extra English notes (e.g. 'light film grain, no bloom')" rows={3} />
+              {field("Extra EN - manual", (
+                <Textarea value={state.extraEN} onChange={(v) => setState({ ...state, extraEN: v })} placeholder="Any extra English notes - e.g. light film grain, no bloom" rows={3} />
               ))}
-              {field("追記（JP）— マニュアル", (
-                <Textarea value={state.extraJP} onChange={(v) => setState({ ...state, extraJP: v })} placeholder="日本語での追記事項（例：微かなフィルムグレイン、ブルームなし）" rows={3} />
+              {field("追記 JP - マニュアル", (
+                <Textarea value={state.extraJP} onChange={(v) => setState({ ...state, extraJP: v })} placeholder="日本語での追記事項 - 例: 微かなフィルムグレイン、ブルームなし" rows={3} />
               ))}
             </CardContent>
           </Card>
@@ -742,7 +879,7 @@ export default function SoraPromptBuilder() {
         {/* RIGHT: Outputs */}
         <div className="space-y-6">
           <Card>
-            <CardHeader title="English Prompt" subtitle="Natural prose for Sora (copy-ready)." />
+            <CardHeader title="English Prompt" subtitle="Natural prose for Sora - copy-ready." />
             <CardContent>
               <div className="flex items-center justify-between mb-3">
                 <div className="text-xs text-gray-500">Aperture ≈ {apertureFromDof(state.dofStrength)} (from DoF {state.dofStrength})</div>
@@ -758,7 +895,7 @@ export default function SoraPromptBuilder() {
             <CardHeader title="日本語プロンプト" subtitle="英語と別でコピペしやすいよう分離。辞書ベースでオフライン生成。" />
             <CardContent>
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2 text-xs text-gray-500"><Languages className="h-4 w-4" />内蔵変換（機械翻訳API不使用）</div>
+                <div className="flex items-center gap-2 text-xs text-gray-500"><Languages className="h-4 w-4" />内蔵変換 (機械翻訳API不使用)</div>
                 <div className="flex gap-2">
                   <Button variant="ghost" onClick={() => copy(JP)} title="Copy Japanese"><Copy className="h-4 w-4" />コピー</Button>
                 </div>
@@ -769,7 +906,7 @@ export default function SoraPromptBuilder() {
 
           {/* Smoke tests */}
           <Card>
-            <CardHeader title="Self‑tests" subtitle="Quick checks to prevent common regressions." />
+            <CardHeader title="Self-tests" subtitle="Quick checks to prevent common regressions." />
             <CardContent>
               <ul className="space-y-1 text-sm">
                 {selfTests.map((t, i) => (
@@ -792,7 +929,7 @@ export default function SoraPromptBuilder() {
 
       <footer className="max-w-6xl mx-auto px-4 pb-10 text-xs text-gray-500">
         <p>
-          Notes: This builder avoids a dedicated color palette field per your request. Each section supports manual overrides ("e.g." inputs). The JP prompt is generated via an internal dictionary to keep everything offline.
+          Notes: This builder includes static camera, candid modes (far or close), forbid-eye-contact, continuous-action emphasis, and generic presets (Glam / Cozy). All ASCII punctuation to avoid parser errors.
         </p>
       </footer>
     </div>
