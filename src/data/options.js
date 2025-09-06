@@ -3,6 +3,15 @@ export const options = {
     { en: "teen", jp: "10代" },
     { en: "young adult", jp: "若い大人" },
     { en: "adult", jp: "大人" },
+    { en: "mature", jp: "成熟した大人" },
+    { en: "child", jp: "子供" },
+    { en: "senior", jp: "高齢者" },
+  ],
+  gender: [
+    { en: "female", jp: "女性" },
+    { en: "male", jp: "男性" },
+    { en: "non-binary", jp: "ノンバイナリー" },
+    { en: "agender", jp: "無性別" },
   ],
   ethnicity: [
     { en: "Japanese", jp: "日本人風" },
@@ -10,6 +19,7 @@ export const options = {
     { en: "Mixed", jp: "ミックス" },
     { en: "Caucasian", jp: "白人風" },
     { en: "Latina", jp: "ラティーナ風" },
+    { en: "Black", jp: "黒人風" },
     { en: "South Asian", jp: "南アジア風" },
     { en: "Southeast Asian", jp: "東南アジア風" },
     { en: "Middle Eastern", jp: "中東風" },
@@ -38,7 +48,6 @@ export const options = {
     { en: "messy bun", jp: "ラフなお団子" },
     { en: "curly bob", jp: "カールのボブ" },
     { en: "double braids", jp: "二つ編み" },
-    { en: "twin tail", jp: "ツインテール" },
   ],
   makeup: [
     { en: "none", jp: "メイクなし" },
@@ -59,7 +68,7 @@ export const options = {
     { en: "green", jp: "グリーン" },
   ],
   tops: [
-    { en: "fitted long-sleeve, slightly open neckline", jp: "やや胸元の開いた長袖" },
+    { en: "fitted light gray long-sleeve, slightly open neckline", jp: "やや胸元の開いた薄いグレーの長袖" },
     { en: "oversized knit sweater", jp: "オーバーサイズのニット" },
     { en: "simple white tee", jp: "シンプルな白T" },
     { en: "button-up shirt", jp: "ボタンアップシャツ" },
@@ -147,7 +156,6 @@ export const options = {
     { en: "over-the-shoulder shot", jp: "肩越しショット" },
   ],
   lighting: [
-    { en: "none" },
     { en: "soft desk lamp + ambient practicals", jp: "柔らかなデスクランプ＋室内の実用光" },
     { en: "cinematic low-key lighting", jp: "シネマ調のローキー照明" },
     { en: "sunset window light", jp: "夕暮れの窓明かり" },
@@ -158,7 +166,6 @@ export const options = {
     { en: "dramatic chiaroscuro", jp: "劇的なキアロスクーロ" },
   ],
   mood: [
-    { en: "none" },
     { en: "calm and focused", jp: "穏やかで集中" },
     { en: "quietly reflective", jp: "静かに物思い" },
     { en: "warm and intimate", jp: "温かく親密" },
