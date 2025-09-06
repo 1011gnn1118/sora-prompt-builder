@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   CameraOff,
   EyeOff,
-  Sliders,
 } from "lucide-react";
 import {
   Card,
@@ -350,68 +349,6 @@ export default function SoraPromptBuilder() {
     return tests;
   }, []);
 
-  // Generic presets - not limited to any genre
-  const applyPreset = (key) => {
-    const baseScene = {
-      background: "cozy room with large window",
-      bgDetails: ["hanging fairy lights", "stack of vinyl records", "neon glow spill"],
-      accessories: ["headphones", "thin necklace"],
-      activity: "reading a paperback",
-      focusSubject: "eyes and the open book",
-    };
-
-    const commonCameraFar = {
-      shot: "medium-long shot",
-      focalLength: 85,
-      staticCamera: true,
-      tripod: true,
-      forbidEyeContact: true,
-      candidMode: "far",
-    };
-    const commonCameraClose = {
-      shot: "close-up",
-      focalLength: 50,
-      staticCamera: true,
-      tripod: true,
-      forbidEyeContact: true,
-      candidMode: "close",
-    };
-
-    const glam = {
-      makeup: "soft glam",
-      tops: "silk blouse",
-      topsManual: "silky pastel blouse with a deep V-neckline that subtly reveals her cleavage",
-      bottoms: "pencil skirt",
-      bottomsManual: "sleek high-waist mini skirt",
-      style: ["cinematic color grading", "soft film grain"],
-      lighting: "neon sign lighting",
-      mood: "nostalgic",
-      extraEN: "Glamorous yet tasteful music-video vibe.",
-      extraJP: "華やかだが上品な雰囲気のミュージックビデオ感。",
-    };
-
-    const cozy = {
-      makeup: "natural makeup",
-      tops: "oversized knit sweater",
-      topsManual: "oversized pastel off-shoulder knit sweater that reveals her collarbone",
-      bottoms: "pleated skirt",
-      bottomsManual: "stylish plaid mini skirt",
-      style: ["cinematic color grading", "soft film grain"],
-      lighting: "soft desk lamp + ambient practicals",
-      mood: "warm and intimate",
-      extraEN: "Approachable, relaxed, candid vibe.",
-      extraJP: "親しみやすくリラックスしたスナップ感。",
-    };
-
-    const presets = {
-      "glam-far": { ...baseScene, ...glam, ...commonCameraFar },
-      "glam-close": { ...baseScene, ...glam, ...commonCameraClose },
-      "cozy-far": { ...baseScene, ...cozy, ...commonCameraFar },
-      "cozy-close": { ...baseScene, ...cozy, ...commonCameraClose },
-    };
-
-    setState((prev) => ({ ...prev, ...presets[key] }));
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -432,17 +369,6 @@ export default function SoraPromptBuilder() {
       <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* LEFT: Controls */}
         <div className="xl:col-span-2 space-y-6">
-          {/* Generic presets */}
-          <Card>
-            <CardHeader title="Presets (Candid & Static)" subtitle="Glam / Cozy × Far / Close with candid and static camera baked in." right={<Sliders className="h-5 w-5 text-gray-500" />} />
-            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <Button variant="ghost" onClick={() => applyPreset("glam-far")}>Glam × Far</Button>
-              <Button variant="ghost" onClick={() => applyPreset("glam-close")}>Glam × Close</Button>
-              <Button variant="ghost" onClick={() => applyPreset("cozy-far")}>Cozy × Far</Button>
-              <Button variant="ghost" onClick={() => applyPreset("cozy-close")}>Cozy × Close</Button>
-            </CardContent>
-          </Card>
-
           {/* Character */}
           <Card>
             <CardHeader title="Character" subtitle="Fine-grained controls - add freckles, moles, dimples, etc." />
@@ -692,7 +618,7 @@ export default function SoraPromptBuilder() {
 
       <footer className="max-w-6xl mx-auto px-4 pb-10 text-xs text-gray-500">
         <p>
-          Notes: This builder includes static camera, candid modes (far or close), forbid-eye-contact, continuous-action emphasis, and generic presets (Glam / Cozy). All ASCII punctuation to avoid parser errors.
+          Notes: This builder includes static camera, candid modes (far or close), forbid-eye-contact, and continuous-action emphasis. All ASCII punctuation to avoid parser errors.
         </p>
       </footer>
     </div>
