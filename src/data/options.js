@@ -3,15 +3,9 @@ export const options = {
     { en: "teen", jp: "10代" },
     { en: "young adult", jp: "若い大人" },
     { en: "adult", jp: "大人" },
-    { en: "mature", jp: "成熟した大人" },
-    { en: "child", jp: "子供" },
-    { en: "senior", jp: "高齢者" },
   ],
   gender: [
     { en: "female", jp: "女性" },
-    { en: "male", jp: "男性" },
-    { en: "non-binary", jp: "ノンバイナリー" },
-    { en: "agender", jp: "無性別" },
   ],
   ethnicity: [
     { en: "Japanese", jp: "日本人風" },
@@ -187,7 +181,13 @@ export const options = {
   ],
 };
 
-export const toSelectOptions = (arr) => arr.map((i) => ({ value: i.en, label: i.en }));
+export const toSelectOptions = (arr) => {
+  const opts = arr.map((i) => ({ value: i.en, label: i.en }));
+  if (!opts.some((o) => o.value === "")) {
+    opts.unshift({ value: "", label: "" });
+  }
+  return opts;
+};
 
 export function findJP(en) {
   for (const group of Object.values(options)) {
