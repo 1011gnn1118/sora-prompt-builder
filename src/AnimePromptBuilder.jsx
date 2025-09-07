@@ -71,6 +71,7 @@ export default function AnimePromptBuilder() {
   const { copy } = useClipboard();
 
   const [lang, setLang] = useState("EN");
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const EN = useMemo(() => buildEN(state), [state]);
   const JP = useMemo(() => buildJP(state), [state]);
@@ -232,43 +233,51 @@ export default function AnimePromptBuilder() {
         </CardContent>
       </Card>
 
-      <Card className="sticky bottom-0 bg-white z-10">
-        <CardHeader
-          title="Prompt"
-          right={
-            <div className="flex gap-2">
+      {showPrompt && (
+        <Card className="fixed bottom-16 left-0 right-0 bg-white z-10 max-w-3xl mx-auto">
+          <CardHeader
+            title="Prompt"
+            right={
+              <div className="flex gap-2">
+                <Button
+                  variant={lang === "EN" ? "default" : "subtle"}
+                  onClick={() => setLang("EN")}
+                >
+                  EN
+                </Button>
+                <Button
+                  variant={lang === "JP" ? "default" : "subtle"}
+                  onClick={() => setLang("JP")}
+                >
+                  JP
+                </Button>
+              </div>
+            }
+          />
+          <CardContent className="space-y-3">
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-gray-600">
+                {lang === "EN" ? "English" : "日本語"}
+              </label>
+              <Textarea value={lang === "EN" ? EN : JP} readOnly />
               <Button
-                variant={lang === "EN" ? "default" : "subtle"}
-                onClick={() => setLang("EN")}
+                onClick={() => copy(lang === "EN" ? EN : JP)}
+                className="mt-1"
+                title={lang === "EN" ? "Copy English" : "Copy Japanese"}
               >
-                EN
-              </Button>
-              <Button
-                variant={lang === "JP" ? "default" : "subtle"}
-                onClick={() => setLang("JP")}
-              >
-                JP
+                <Copy className="h-4 w-4" />
+                {lang === "EN" ? "Copy EN" : "コピー"}
               </Button>
             </div>
-          }
-        />
-        <CardContent className="space-y-3">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
-              {lang === "EN" ? "English" : "日本語"}
-            </label>
-            <Textarea value={lang === "EN" ? EN : JP} readOnly />
-            <Button
-              onClick={() => copy(lang === "EN" ? EN : JP)}
-              className="mt-1"
-              title={lang === "EN" ? "Copy English" : "Copy Japanese"}
-            >
-              <Copy className="h-4 w-4" />
-              {lang === "EN" ? "Copy EN" : "コピー"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+      <Button
+        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-20"
+        onClick={() => setShowPrompt((p) => !p)}
+      >
+        {showPrompt ? "Hide Prompt" : "Show Prompt"}
+      </Button>
     </div>
   );
 }
