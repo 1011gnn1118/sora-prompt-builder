@@ -70,6 +70,8 @@ export default function AnimePromptBuilder() {
   const [state, setState] = useState(defaultState);
   const { copy } = useClipboard();
 
+  const [lang, setLang] = useState("EN");
+
   const EN = useMemo(() => buildEN(state), [state]);
   const JP = useMemo(() => buildJP(state), [state]);
 
@@ -231,17 +233,39 @@ export default function AnimePromptBuilder() {
       </Card>
 
       <Card className="sticky bottom-0 bg-white z-10">
-        <CardHeader title="Prompts" />
+        <CardHeader
+          title="Prompt"
+          right={
+            <div className="flex gap-2">
+              <Button
+                variant={lang === "EN" ? "default" : "subtle"}
+                onClick={() => setLang("EN")}
+              >
+                EN
+              </Button>
+              <Button
+                variant={lang === "JP" ? "default" : "subtle"}
+                onClick={() => setLang("JP")}
+              >
+                JP
+              </Button>
+            </div>
+          }
+        />
         <CardContent className="space-y-3">
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">English</label>
-            <Textarea value={EN} readOnly />
-            <Button onClick={() => copy(EN)} className="mt-1" title="Copy English"><Copy className="h-4 w-4" />Copy EN</Button>
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">日本語</label>
-            <Textarea value={JP} readOnly />
-            <Button onClick={() => copy(JP)} className="mt-1" title="Copy Japanese"><Copy className="h-4 w-4" />Copy JP</Button>
+            <label className="text-xs font-medium text-gray-600">
+              {lang === "EN" ? "English" : "日本語"}
+            </label>
+            <Textarea value={lang === "EN" ? EN : JP} readOnly />
+            <Button
+              onClick={() => copy(lang === "EN" ? EN : JP)}
+              className="mt-1"
+              title={lang === "EN" ? "Copy English" : "Copy Japanese"}
+            >
+              <Copy className="h-4 w-4" />
+              {lang === "EN" ? "Copy EN" : "コピー"}
+            </Button>
           </div>
         </CardContent>
       </Card>
