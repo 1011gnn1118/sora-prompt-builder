@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardHeader, CardContent, Button, Select, Textarea } from "./components/ui";
 import { animeOptions, toSelectOptions, findJP } from "./data/animeOptions";
-import { Copy, Shuffle, RotateCcw } from "lucide-react";
+import { Copy, Shuffle, RotateCcw, Wand2, Languages } from "lucide-react";
 
 function useClipboard() {
   const copy = async (text) => {
@@ -108,170 +108,182 @@ export default function AnimePromptBuilder() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-32">
-      <div className="flex justify-end gap-2">
-        <Button onClick={randomize} title="Randomize">
-          <Shuffle className="h-4 w-4" />Random
-        </Button>
-        <Button variant="subtle" onClick={reset} title="Reset">
-          <RotateCcw className="h-4 w-4" />Reset
-        </Button>
-      </div>
-      <Card>
-        <CardHeader title="Character" />
-        <CardContent className="space-y-3">
-          {field("Character Type", (
-            <Select
-              value={state.characterType}
-              onChange={(v) => setState({ ...state, characterType: v })}
-              options={toSelectOptions(animeOptions.characterType)}
-              allowCustom
-            />
-          ))}
-          {field("Hair Color", (
-            <Select
-              value={state.hairColor}
-              onChange={(v) => setState({ ...state, hairColor: v })}
-              options={toSelectOptions(animeOptions.hairColor)}
-              allowCustom
-            />
-          ))}
-          {field("Hair Style", (
-            <Select
-              value={state.hairStyle}
-              onChange={(v) => setState({ ...state, hairStyle: v })}
-              options={toSelectOptions(animeOptions.hairStyle)}
-              allowCustom
-            />
-          ))}
-          {field("Eye Color", (
-            <Select
-              value={state.eyeColor}
-              onChange={(v) => setState({ ...state, eyeColor: v })}
-              options={toSelectOptions(animeOptions.eyeColor)}
-              allowCustom
-            />
-          ))}
-          {field("Expression", (
-            <Select
-              value={state.expression}
-              onChange={(v) => setState({ ...state, expression: v })}
-              options={toSelectOptions(animeOptions.expression)}
-              allowCustom
-            />
-          ))}
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <header className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Wand2 className="h-5 w-5" />
+            <h1 className="text-base sm:text-lg font-semibold">Anime Prompt Builder — EN/JP</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button onClick={randomize} title="Randomize"><Shuffle className="h-4 w-4" />Random</Button>
+            <Button variant="subtle" onClick={reset} title="Reset"><RotateCcw className="h-4 w-4" />Reset</Button>
+          </div>
+        </div>
+      </header>
 
-      <Card>
-        <CardHeader title="Scene" />
-        <CardContent className="space-y-3">
-          {field("Pose", (
-            <Select
-              value={state.pose}
-              onChange={(v) => setState({ ...state, pose: v })}
-              options={toSelectOptions(animeOptions.pose)}
-              allowCustom
-            />
-          ))}
-          {field("Fashion", (
-            <Select
-              value={state.fashion}
-              onChange={(v) => setState({ ...state, fashion: v })}
-              options={toSelectOptions(animeOptions.fashion)}
-              allowCustom
-            />
-          ))}
-          {field("Background", (
-            <Select
-              value={state.background}
-              onChange={(v) => setState({ ...state, background: v })}
-              options={toSelectOptions(animeOptions.background)}
-              allowCustom
-            />
-          ))}
-          {field("Mood", (
-            <Select
-              value={state.mood}
-              onChange={(v) => setState({ ...state, mood: v })}
-              options={toSelectOptions(animeOptions.mood)}
-              allowCustom
-            />
-          ))}
-          {field("Details", (
-            <Select
-              value={state.details}
-              onChange={(v) => setState({ ...state, details: v })}
-              options={toSelectOptions(animeOptions.details)}
-              allowCustom
-            />
-          ))}
-          {field("Camera Angle", (
-            <Select
-              value={state.cameraAngle}
-              onChange={(v) => setState({ ...state, cameraAngle: v })}
-              options={toSelectOptions(animeOptions.cameraAngle)}
-              allowCustom
-            />
-          ))}
-          {field("Zoom", (
-            <Select
-              value={state.zoom}
-              onChange={(v) => setState({ ...state, zoom: v })}
-              options={toSelectOptions(animeOptions.zoom)}
-              allowCustom
-            />
-          ))}
-          {field("Style", (
-            <Select
-              value={state.style}
-              onChange={(v) => setState({ ...state, style: v })}
-              options={toSelectOptions(animeOptions.style)}
-              allowCustom
-            />
-          ))}
-        </CardContent>
-      </Card>
+      <main className="max-w-6xl mx-auto px-4 pt-6 pb-32 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+        <div className="xl:col-span-2 space-y-6">
+          <Card>
+            <CardHeader title="Character" />
+            <CardContent className="space-y-3">
+              {field("Character Type", (
+                <Select
+                  value={state.characterType}
+                  onChange={(v) => setState({ ...state, characterType: v })}
+                  options={toSelectOptions(animeOptions.characterType)}
+                  allowCustom
+                />
+              ))}
+              {field("Hair Color", (
+                <Select
+                  value={state.hairColor}
+                  onChange={(v) => setState({ ...state, hairColor: v })}
+                  options={toSelectOptions(animeOptions.hairColor)}
+                  allowCustom
+                />
+              ))}
+              {field("Hair Style", (
+                <Select
+                  value={state.hairStyle}
+                  onChange={(v) => setState({ ...state, hairStyle: v })}
+                  options={toSelectOptions(animeOptions.hairStyle)}
+                  allowCustom
+                />
+              ))}
+              {field("Eye Color", (
+                <Select
+                  value={state.eyeColor}
+                  onChange={(v) => setState({ ...state, eyeColor: v })}
+                  options={toSelectOptions(animeOptions.eyeColor)}
+                  allowCustom
+                />
+              ))}
+              {field("Expression", (
+                <Select
+                  value={state.expression}
+                  onChange={(v) => setState({ ...state, expression: v })}
+                  options={toSelectOptions(animeOptions.expression)}
+                  allowCustom
+                />
+              ))}
+            </CardContent>
+          </Card>
 
-      {showPrompt && (
-        <Card className="fixed bottom-16 left-0 right-0 bg-white z-10 max-w-3xl mx-auto">
-          <CardHeader
-            title="Prompt"
-            right={
-              <div className="flex gap-2">
-                <Button
-                  variant={lang === "EN" ? "default" : "subtle"}
-                  onClick={() => setLang("EN")}
-                >
-                  EN
-                </Button>
-                <Button
-                  variant={lang === "JP" ? "default" : "subtle"}
-                  onClick={() => setLang("JP")}
-                >
-                  JP
-                </Button>
-              </div>
-            }
-          />
-          <CardContent className="space-y-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-600">
-                {lang === "EN" ? "English" : "日本語"}
-              </label>
-              <Textarea value={lang === "EN" ? EN : JP} readOnly />
-              <Button
-                onClick={() => copy(lang === "EN" ? EN : JP)}
-                className="mt-1"
-                title={lang === "EN" ? "Copy English" : "Copy Japanese"}
-              >
-                <Copy className="h-4 w-4" />
-                {lang === "EN" ? "Copy EN" : "コピー"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          <Card>
+            <CardHeader title="Scene" />
+            <CardContent className="space-y-3">
+              {field("Pose", (
+                <Select
+                  value={state.pose}
+                  onChange={(v) => setState({ ...state, pose: v })}
+                  options={toSelectOptions(animeOptions.pose)}
+                  allowCustom
+                />
+              ))}
+              {field("Fashion", (
+                <Select
+                  value={state.fashion}
+                  onChange={(v) => setState({ ...state, fashion: v })}
+                  options={toSelectOptions(animeOptions.fashion)}
+                  allowCustom
+                />
+              ))}
+              {field("Background", (
+                <Select
+                  value={state.background}
+                  onChange={(v) => setState({ ...state, background: v })}
+                  options={toSelectOptions(animeOptions.background)}
+                  allowCustom
+                />
+              ))}
+              {field("Mood", (
+                <Select
+                  value={state.mood}
+                  onChange={(v) => setState({ ...state, mood: v })}
+                  options={toSelectOptions(animeOptions.mood)}
+                  allowCustom
+                />
+              ))}
+              {field("Details", (
+                <Select
+                  value={state.details}
+                  onChange={(v) => setState({ ...state, details: v })}
+                  options={toSelectOptions(animeOptions.details)}
+                  allowCustom
+                />
+              ))}
+              {field("Camera Angle", (
+                <Select
+                  value={state.cameraAngle}
+                  onChange={(v) => setState({ ...state, cameraAngle: v })}
+                  options={toSelectOptions(animeOptions.cameraAngle)}
+                  allowCustom
+                />
+              ))}
+              {field("Zoom", (
+                <Select
+                  value={state.zoom}
+                  onChange={(v) => setState({ ...state, zoom: v })}
+                  options={toSelectOptions(animeOptions.zoom)}
+                  allowCustom
+                />
+              ))}
+              {field("Style", (
+                <Select
+                  value={state.style}
+                  onChange={(v) => setState({ ...state, style: v })}
+                  options={toSelectOptions(animeOptions.style)}
+                  allowCustom
+                />
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          {showPrompt && (
+            <Card className="fixed bottom-16 left-0 right-0 bg-white z-10">
+              <CardHeader
+                title={lang === "EN" ? "English Prompt" : "日本語プロンプト"}
+                right={
+                  <div className="flex gap-2">
+                    <Button variant={lang === "EN" ? "default" : "subtle"} onClick={() => setLang("EN")}>
+                      EN
+                    </Button>
+                    <Button variant={lang === "JP" ? "default" : "subtle"} onClick={() => setLang("JP")}>
+                      JP
+                    </Button>
+                  </div>
+                }
+              />
+              <CardContent>
+                <div className="flex items-center justify-between mb-3">
+                  {lang === "EN" ? (
+                    <div className="text-xs text-gray-500">English prompt</div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <Languages className="h-4 w-4" />内蔵変換 (機械翻訳API不使用)
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      onClick={() => copy(lang === "EN" ? EN : JP)}
+                      title={lang === "EN" ? "Copy English" : "Copy Japanese"}
+                    >
+                      <Copy className="h-4 w-4" />
+                      {lang === "EN" ? "Copy" : "コピー"}
+                    </Button>
+                  </div>
+                </div>
+                <Textarea value={lang === "EN" ? EN : JP} onChange={() => {}} rows={14} className="font-mono" />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </main>
+
       <Button
         className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-20"
         onClick={() => setShowPrompt((p) => !p)}
