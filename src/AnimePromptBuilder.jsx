@@ -16,21 +16,28 @@ function useClipboard() {
 }
 
 const defaultState = {
+  characterType: "cheerful and energetic girl",
   hairColor: "blonde",
   hairStyle: "long straight",
   eyeColor: "blue",
   expression: "smiling",
-  outfit: "school uniform",
-  background: "cherry blossom park",
+  pose: "smiling and waving hand",
+  fashion: "sailor-inspired outfit",
+  background: "after school classroom",
+  mood: "romantic atmosphere",
+  details: "sparkling eyes",
   style: "anime style",
 };
 
 function buildEN(state) {
   const parts = [
-    `Detailed illustration of a beautiful anime girl with ${state.hairColor} ${state.hairStyle} hair and ${state.eyeColor} eyes`,
+    `Detailed illustration of a ${state.characterType} with ${state.hairColor} ${state.hairStyle} hair and ${state.eyeColor} eyes`,
     `${state.expression} expression`,
-    `wearing ${state.outfit}`,
+    `${state.pose}`,
+    `wearing ${state.fashion}`,
     `background: ${state.background}`,
+    `mood: ${state.mood}`,
+    `${state.details}`,
     `style: ${state.style}`,
   ];
   return parts.join(", ");
@@ -39,11 +46,15 @@ function buildEN(state) {
 function buildJP(state) {
   const parts = [
     `美少女アニメのイラスト`,
+    `${findJP(state.characterType)}`,
     `髪は${findJP(state.hairColor)}の${findJP(state.hairStyle)}`,
     `瞳は${findJP(state.eyeColor)}`,
     `${findJP(state.expression)}表情`,
-    `${findJP(state.outfit)}`,
+    `${findJP(state.pose)}`,
+    `${findJP(state.fashion)}`,
     `背景:${findJP(state.background)}`,
+    `雰囲気:${findJP(state.mood)}`,
+    `${findJP(state.details)}`,
     `スタイル:${findJP(state.style)}`,
   ];
   return parts.join("、");
@@ -68,6 +79,13 @@ export default function AnimePromptBuilder() {
       <Card>
         <CardHeader title="Character" />
         <CardContent className="space-y-3">
+          {field("Character Type", (
+            <Select
+              value={state.characterType}
+              onChange={(v) => setState({ ...state, characterType: v })}
+              options={toSelectOptions(animeOptions.characterType)}
+            />
+          ))}
           {field("Hair Color", (
             <Select
               value={state.hairColor}
@@ -102,11 +120,18 @@ export default function AnimePromptBuilder() {
       <Card>
         <CardHeader title="Scene" />
         <CardContent className="space-y-3">
-          {field("Outfit", (
+          {field("Pose", (
             <Select
-              value={state.outfit}
-              onChange={(v) => setState({ ...state, outfit: v })}
-              options={toSelectOptions(animeOptions.outfit)}
+              value={state.pose}
+              onChange={(v) => setState({ ...state, pose: v })}
+              options={toSelectOptions(animeOptions.pose)}
+            />
+          ))}
+          {field("Fashion", (
+            <Select
+              value={state.fashion}
+              onChange={(v) => setState({ ...state, fashion: v })}
+              options={toSelectOptions(animeOptions.fashion)}
             />
           ))}
           {field("Background", (
@@ -114,6 +139,20 @@ export default function AnimePromptBuilder() {
               value={state.background}
               onChange={(v) => setState({ ...state, background: v })}
               options={toSelectOptions(animeOptions.background)}
+            />
+          ))}
+          {field("Mood", (
+            <Select
+              value={state.mood}
+              onChange={(v) => setState({ ...state, mood: v })}
+              options={toSelectOptions(animeOptions.mood)}
+            />
+          ))}
+          {field("Details", (
+            <Select
+              value={state.details}
+              onChange={(v) => setState({ ...state, details: v })}
+              options={toSelectOptions(animeOptions.details)}
             />
           ))}
           {field("Style", (
