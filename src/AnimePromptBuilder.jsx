@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardHeader, CardContent, Button, Select, Textarea } from "./components/ui";
 import { animeOptions, toSelectOptions, findJP } from "./data/animeOptions";
-import { Copy } from "lucide-react";
+import { Copy, Shuffle, RotateCcw } from "lucide-react";
 
 function useClipboard() {
   const copy = async (text) => {
@@ -67,6 +67,28 @@ export default function AnimePromptBuilder() {
   const EN = useMemo(() => buildEN(state), [state]);
   const JP = useMemo(() => buildJP(state), [state]);
 
+  function randomPick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)].en;
+  }
+
+  const randomize = () => {
+    setState({
+      characterType: randomPick(animeOptions.characterType),
+      hairColor: randomPick(animeOptions.hairColor),
+      hairStyle: randomPick(animeOptions.hairStyle),
+      eyeColor: randomPick(animeOptions.eyeColor),
+      expression: randomPick(animeOptions.expression),
+      pose: randomPick(animeOptions.pose),
+      fashion: randomPick(animeOptions.fashion),
+      background: randomPick(animeOptions.background),
+      mood: randomPick(animeOptions.mood),
+      details: randomPick(animeOptions.details),
+      style: randomPick(animeOptions.style),
+    });
+  };
+
+  const reset = () => setState(defaultState);
+
   const field = (label, node) => (
     <div className="space-y-1">
       <label className="text-xs font-medium text-gray-600">{label}</label>
@@ -76,6 +98,14 @@ export default function AnimePromptBuilder() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      <div className="flex justify-end gap-2">
+        <Button onClick={randomize} title="Randomize">
+          <Shuffle className="h-4 w-4" />Random
+        </Button>
+        <Button variant="subtle" onClick={reset} title="Reset">
+          <RotateCcw className="h-4 w-4" />Reset
+        </Button>
+      </div>
       <Card>
         <CardHeader title="Character" />
         <CardContent className="space-y-3">
