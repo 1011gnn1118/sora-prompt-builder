@@ -45,19 +45,48 @@ export const Button = ({
   );
 };
 
-export const Select = ({ value, onChange, options, className = "" }) => (
-  <select
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm ${className}`}
-  >
-    {options.map((o) => (
-      <option key={o.value} value={o.value}>
-        {o.label}
-      </option>
-    ))}
-  </select>
-);
+export const Select = ({
+  value,
+  onChange,
+  options,
+  className = "",
+  allowCustom = false,
+}) => {
+  if (allowCustom) {
+    const id = React.useId();
+    return (
+      <>
+        <input
+          list={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm ${className}`}
+        />
+        <datalist id={id}>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </datalist>
+      </>
+    );
+  }
+
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm ${className}`}
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 export const Input = ({
   value,
