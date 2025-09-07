@@ -84,6 +84,7 @@ export default function AnimePromptBuilder() {
               value={state.characterType}
               onChange={(v) => setState({ ...state, characterType: v })}
               options={toSelectOptions(animeOptions.characterType)}
+              allowCustom
             />
           ))}
           {field("Hair Color", (
@@ -91,6 +92,7 @@ export default function AnimePromptBuilder() {
               value={state.hairColor}
               onChange={(v) => setState({ ...state, hairColor: v })}
               options={toSelectOptions(animeOptions.hairColor)}
+              allowCustom
             />
           ))}
           {field("Hair Style", (
@@ -98,6 +100,7 @@ export default function AnimePromptBuilder() {
               value={state.hairStyle}
               onChange={(v) => setState({ ...state, hairStyle: v })}
               options={toSelectOptions(animeOptions.hairStyle)}
+              allowCustom
             />
           ))}
           {field("Eye Color", (
@@ -105,6 +108,7 @@ export default function AnimePromptBuilder() {
               value={state.eyeColor}
               onChange={(v) => setState({ ...state, eyeColor: v })}
               options={toSelectOptions(animeOptions.eyeColor)}
+              allowCustom
             />
           ))}
           {field("Expression", (
@@ -112,6 +116,7 @@ export default function AnimePromptBuilder() {
               value={state.expression}
               onChange={(v) => setState({ ...state, expression: v })}
               options={toSelectOptions(animeOptions.expression)}
+              allowCustom
             />
           ))}
         </CardContent>
@@ -125,6 +130,7 @@ export default function AnimePromptBuilder() {
               value={state.pose}
               onChange={(v) => setState({ ...state, pose: v })}
               options={toSelectOptions(animeOptions.pose)}
+              allowCustom
             />
           ))}
           {field("Fashion", (
@@ -132,6 +138,7 @@ export default function AnimePromptBuilder() {
               value={state.fashion}
               onChange={(v) => setState({ ...state, fashion: v })}
               options={toSelectOptions(animeOptions.fashion)}
+              allowCustom
             />
           ))}
           {field("Background", (
@@ -139,6 +146,7 @@ export default function AnimePromptBuilder() {
               value={state.background}
               onChange={(v) => setState({ ...state, background: v })}
               options={toSelectOptions(animeOptions.background)}
+              allowCustom
             />
           ))}
           {field("Mood", (
@@ -146,6 +154,7 @@ export default function AnimePromptBuilder() {
               value={state.mood}
               onChange={(v) => setState({ ...state, mood: v })}
               options={toSelectOptions(animeOptions.mood)}
+              allowCustom
             />
           ))}
           {field("Details", (
@@ -153,6 +162,7 @@ export default function AnimePromptBuilder() {
               value={state.details}
               onChange={(v) => setState({ ...state, details: v })}
               options={toSelectOptions(animeOptions.details)}
+              allowCustom
             />
           ))}
           {field("Style", (
@@ -160,6 +170,7 @@ export default function AnimePromptBuilder() {
               value={state.style}
               onChange={(v) => setState({ ...state, style: v })}
               options={toSelectOptions(animeOptions.style)}
+              allowCustom
             />
           ))}
         </CardContent>
