@@ -402,7 +402,7 @@ export default function SoraPromptBuilder() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         {/* LEFT: Controls */}
         <div className="xl:col-span-2 space-y-6">
           {/* Character */}
@@ -616,7 +616,7 @@ export default function SoraPromptBuilder() {
         </div>
 
         {/* RIGHT: Outputs */}
-        <div className="space-y-6">
+        <div className="space-y-6 xl:sticky xl:top-4">
           <Card>
             <CardHeader title="English Prompt" subtitle="Natural prose for Sora - copy-ready." />
             <CardContent>
