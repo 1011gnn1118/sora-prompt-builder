@@ -594,7 +594,7 @@ export default function SoraPromptBuilder() {
 
         {/* RIGHT: Outputs */}
         <div className="space-y-6">
-          <Card className="sticky bottom-0 bg-white z-10">
+          <Card className="fixed bottom-0 left-0 right-0 bg-white z-10">
             <CardHeader
               title={lang === "EN" ? "English Prompt" : "日本語プロンプト"}
               subtitle={
