@@ -261,6 +261,7 @@ export default function SoraPromptBuilder() {
   const [state, setState] = useState(defaultState);
   const [seed, setSeed] = useState(0);
   const { copy } = useClipboard();
+  const [lang, setLang] = useState("EN");
 
   const EN = useMemo(() => buildEnglishPrompt(state), [state]);
   const JP = useMemo(() => buildJapanesePrompt(state), [state]);
@@ -618,28 +619,53 @@ export default function SoraPromptBuilder() {
         {/* RIGHT: Outputs */}
         <div className="space-y-6 xl:sticky xl:top-4">
           <Card>
-            <CardHeader title="English Prompt" subtitle="Natural prose for Sora - copy-ready." />
+            <CardHeader
+              title={lang === "EN" ? "English Prompt" : "日本語プロンプト"}
+              subtitle={
+                lang === "EN"
+                  ? "Natural prose for Sora - copy-ready."
+                  : "英語と別でコピペしやすいよう分離。辞書ベースでオフライン生成。"
+              }
+              right={
+                <div className="flex gap-2">
+                  <Button
+                    variant={lang === "EN" ? "default" : "subtle"}
+                    onClick={() => setLang("EN")}
+                  >
+                    EN
+                  </Button>
+                  <Button
+                    variant={lang === "JP" ? "default" : "subtle"}
+                    onClick={() => setLang("JP")}
+                  >
+                    JP
+                  </Button>
+                </div>
+              }
+            />
             <CardContent>
               <div className="flex items-center justify-between mb-3">
-                <div className="text-xs text-gray-500">Aperture ≈ {apertureFromDof(state.dofStrength)} (from DoF {state.dofStrength})</div>
+                {lang === "EN" ? (
+                  <div className="text-xs text-gray-500">
+                    Aperture ≈ {apertureFromDof(state.dofStrength)} (from DoF {state.dofStrength})
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Languages className="h-4 w-4" />内蔵変換 (機械翻訳API不使用)
+                  </div>
+                )}
                 <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => copy(EN)} title="Copy English"><Copy className="h-4 w-4" />Copy</Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => copy(lang === "EN" ? EN : JP)}
+                    title={lang === "EN" ? "Copy English" : "Copy Japanese"}
+                  >
+                    <Copy className="h-4 w-4" />
+                    {lang === "EN" ? "Copy" : "コピー"}
+                  </Button>
                 </div>
               </div>
-              <Textarea value={EN} onChange={() => {}} rows={14} className="font-mono" />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader title="日本語プロンプト" subtitle="英語と別でコピペしやすいよう分離。辞書ベースでオフライン生成。" />
-            <CardContent>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2 text-xs text-gray-500"><Languages className="h-4 w-4" />内蔵変換 (機械翻訳API不使用)</div>
-                <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => copy(JP)} title="Copy Japanese"><Copy className="h-4 w-4" />コピー</Button>
-                </div>
-              </div>
-              <Textarea value={JP} onChange={() => {}} rows={14} className="font-mono" />
+              <Textarea value={lang === "EN" ? EN : JP} onChange={() => {}} rows={14} className="font-mono" />
             </CardContent>
           </Card>
 
