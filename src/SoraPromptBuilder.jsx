@@ -403,7 +403,7 @@ export default function SoraPromptBuilder() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      <main className="max-w-6xl mx-auto px-4 pt-6 pb-32 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         {/* LEFT: Controls */}
         <div className="xl:col-span-2 space-y-6">
           {/* Character */}
@@ -617,8 +617,29 @@ export default function SoraPromptBuilder() {
         </div>
 
         {/* RIGHT: Outputs */}
-        <div className="space-y-6 xl:sticky xl:top-4">
+        <div className="space-y-6">
+          {/* Smoke tests */}
           <Card>
+            <CardHeader title="Self-tests" subtitle="Quick checks to prevent common regressions." />
+            <CardContent>
+              <ul className="space-y-1 text-sm">
+                {selfTests.map((t, i) => (
+                  <li key={i} className={`flex items-center gap-2 ${t.pass ? "text-emerald-700" : "text-red-700"}`}>
+                    <ShieldCheck className="h-4 w-4" />{t.name}: {t.pass ? "PASS" : "FAIL"}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader title="Utilities" subtitle="Download JSON with current settings." />
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="ghost" onClick={exportJSON}><Download className="h-4 w-4" />Download JSON</Button>
+            </CardContent>
+          </Card>
+
+          <Card className="sticky bottom-0 bg-white z-10">
             <CardHeader
               title={lang === "EN" ? "English Prompt" : "日本語プロンプト"}
               subtitle={
@@ -666,27 +687,6 @@ export default function SoraPromptBuilder() {
                 </div>
               </div>
               <Textarea value={lang === "EN" ? EN : JP} onChange={() => {}} rows={14} className="font-mono" />
-            </CardContent>
-          </Card>
-
-          {/* Smoke tests */}
-          <Card>
-            <CardHeader title="Self-tests" subtitle="Quick checks to prevent common regressions." />
-            <CardContent>
-              <ul className="space-y-1 text-sm">
-                {selfTests.map((t, i) => (
-                  <li key={i} className={`flex items-center gap-2 ${t.pass ? "text-emerald-700" : "text-red-700"}`}>
-                    <ShieldCheck className="h-4 w-4" />{t.name}: {t.pass ? "PASS" : "FAIL"}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader title="Utilities" subtitle="Download JSON with current settings." />
-            <CardContent className="flex flex-col gap-2">
-              <Button variant="ghost" onClick={exportJSON}><Download className="h-4 w-4" />Download JSON</Button>
             </CardContent>
           </Card>
         </div>
