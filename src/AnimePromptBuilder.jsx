@@ -105,7 +105,7 @@ export default function AnimePromptBuilder() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 pb-32">
       <div className="flex justify-end gap-2">
         <Button onClick={randomize} title="Randomize">
           <Shuffle className="h-4 w-4" />Random
@@ -230,7 +230,7 @@ export default function AnimePromptBuilder() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="sticky bottom-0 bg-white z-10">
         <CardHeader title="Prompts" />
         <CardContent className="space-y-3">
           <div className="space-y-1">
