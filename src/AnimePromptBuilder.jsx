@@ -26,6 +26,8 @@ const defaultState = {
   background: "after school classroom",
   mood: "romantic atmosphere",
   details: "sparkling eyes",
+  cameraAngle: "front view",
+  zoom: "full body",
   style: "anime style",
 };
 
@@ -38,6 +40,8 @@ function buildEN(state) {
     `background: ${state.background}`,
     `mood: ${state.mood}`,
     `${state.details}`,
+    `camera angle: ${state.cameraAngle}`,
+    `zoom: ${state.zoom}`,
     `style: ${state.style}`,
   ];
   return parts.join(", ");
@@ -55,6 +59,8 @@ function buildJP(state) {
     `背景:${findJP(state.background)}`,
     `雰囲気:${findJP(state.mood)}`,
     `${findJP(state.details)}`,
+    `カメラアングル:${findJP(state.cameraAngle)}`,
+    `ズーム:${findJP(state.zoom)}`,
     `スタイル:${findJP(state.style)}`,
   ];
   return parts.join("、");
@@ -83,6 +89,8 @@ export default function AnimePromptBuilder() {
       background: randomPick(animeOptions.background),
       mood: randomPick(animeOptions.mood),
       details: randomPick(animeOptions.details),
+      cameraAngle: randomPick(animeOptions.cameraAngle),
+      zoom: randomPick(animeOptions.zoom),
       style: randomPick(animeOptions.style),
     });
   };
@@ -192,6 +200,22 @@ export default function AnimePromptBuilder() {
               value={state.details}
               onChange={(v) => setState({ ...state, details: v })}
               options={toSelectOptions(animeOptions.details)}
+              allowCustom
+            />
+          ))}
+          {field("Camera Angle", (
+            <Select
+              value={state.cameraAngle}
+              onChange={(v) => setState({ ...state, cameraAngle: v })}
+              options={toSelectOptions(animeOptions.cameraAngle)}
+              allowCustom
+            />
+          ))}
+          {field("Zoom", (
+            <Select
+              value={state.zoom}
+              onChange={(v) => setState({ ...state, zoom: v })}
+              options={toSelectOptions(animeOptions.zoom)}
               allowCustom
             />
           ))}

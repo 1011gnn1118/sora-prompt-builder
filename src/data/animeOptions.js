@@ -98,6 +98,22 @@ export const animeOptions = {
     { en: "shimmering highlights", jp: "きらめくハイライト" },
     { en: "porcelain-like skin", jp: "磁器のような肌" },
   ],
+  cameraAngle: [
+    { en: "front view", jp: "正面" },
+    { en: "side view", jp: "側面" },
+    { en: "back view", jp: "背面" },
+    { en: "low angle", jp: "ローアングル" },
+    { en: "high angle", jp: "ハイアングル" },
+    { en: "bird's-eye view", jp: "俯瞰" },
+    { en: "worm's-eye view", jp: "煽り" },
+    { en: "over the shoulder", jp: "肩越し" },
+  ],
+  zoom: [
+    { en: "full body", jp: "全身" },
+    { en: "half body", jp: "半身" },
+    { en: "close-up", jp: "アップ" },
+    { en: "extreme close-up", jp: "極端なアップ" },
+  ],
   style: [
     { en: "anime style", jp: "アニメ風" },
     { en: "manga style", jp: "マンガ風" },
