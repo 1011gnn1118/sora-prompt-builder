@@ -6,7 +6,6 @@ import {
   Download,
   Languages,
   Wand2,
-  ShieldCheck,
   CameraOff,
   EyeOff,
 } from "lucide-react";
@@ -363,29 +362,6 @@ export default function SoraPromptBuilder() {
     </div>
   );
 
-  // Self-tests to catch regressions (kept + expanded)
-  const selfTests = useMemo(() => {
-    const tests = [];
-    tests.push({ name: "defaultState defined", pass: typeof defaultState === "object" });
-    const en = buildEnglishPrompt(defaultState);
-    tests.push({ name: "EN prompt mentions Camera", pass: /Camera:\\s/.test(en) });
-    const jp = buildJapanesePrompt(defaultState);
-    tests.push({ name: "JP prompt mentions カメラ", pass: /カメラ：/.test(jp) });
-    tests.push({ name: "Static camera phrase present (EN)", pass: buildEnglishPrompt({ ...defaultState, staticCamera: true }).includes("static locked-off tripod") });
-    tests.push({ name: "Absolute no-movement present (EN)", pass: buildEnglishPrompt({ ...defaultState, staticCamera: true }).includes("no push-in") });
-    tests.push({ name: "Candid FAR injects wording (EN)", pass: buildEnglishPrompt({ ...defaultState, candidMode: "far" }).includes("documentary-style") });
-    tests.push({ name: "Candid CLOSE injects wording (EN)", pass: buildEnglishPrompt({ ...defaultState, candidMode: "close" }).includes("peeking into her private space") });
-    tests.push({ name: "JP static phrase present", pass: buildJapanesePrompt({ ...defaultState, staticCamera: true }).includes("ズーム・パン・ドリー・プッシュイン・手ブレ・微揺れ一切なし") });
-    tests.push({ name: "Forbid eye contact injects (EN)", pass: buildEnglishPrompt({ ...defaultState, forbidEyeContact: true }).includes("excluding any direct eye contact") });
-    tests.push({ name: "Action repetition phrase present (EN)", pass: buildEnglishPrompt({ ...defaultState, activity: "stretching arms lazily" }).includes("repeated continuously") });
-    tests.push({ name: "Action repetition phrase present (JP)", pass: buildJapanesePrompt({ ...defaultState, activity: "stretching arms lazily" }).includes("繰り返し持続的に") });
-    tests.push({ name: "Full body guarantee triggers (EN)", pass: buildEnglishPrompt({ ...defaultState, shot: "full body shot" }).includes("fully visible from head to toe") });
-    tests.push({ name: "Aperture mapping works", pass: /^f\/[0-9]+\.[0-9]$/.test(apertureFromDof(defaultState.dofStrength)) });
-    tests.push({ name: "Lighting field composes", pass: buildEnglishPrompt({ ...defaultState, lighting: "neon sign lighting" }).includes("Lighting: neon sign lighting") });
-    tests.push({ name: "Dress field composes (EN)", pass: buildEnglishPrompt({ ...defaultState, dress: "sundress", tops: "", bottoms: "" }).includes("Outfit: sundress") });
-    tests.push({ name: "Dress field composes (JP)", pass: buildJapanesePrompt({ ...defaultState, dress: "sundress", tops: "", bottoms: "" }).includes("服装：サマードレス") });
-    return tests;
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -618,27 +594,6 @@ export default function SoraPromptBuilder() {
 
         {/* RIGHT: Outputs */}
         <div className="space-y-6">
-          {/* Smoke tests */}
-          <Card>
-            <CardHeader title="Self-tests" subtitle="Quick checks to prevent common regressions." />
-            <CardContent>
-              <ul className="space-y-1 text-sm">
-                {selfTests.map((t, i) => (
-                  <li key={i} className={`flex items-center gap-2 ${t.pass ? "text-emerald-700" : "text-red-700"}`}>
-                    <ShieldCheck className="h-4 w-4" />{t.name}: {t.pass ? "PASS" : "FAIL"}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader title="Utilities" subtitle="Download JSON with current settings." />
-            <CardContent className="flex flex-col gap-2">
-              <Button variant="ghost" onClick={exportJSON}><Download className="h-4 w-4" />Download JSON</Button>
-            </CardContent>
-          </Card>
-
           <Card className="sticky bottom-0 bg-white z-10">
             <CardHeader
               title={lang === "EN" ? "English Prompt" : "日本語プロンプト"}
