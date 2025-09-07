@@ -44,7 +44,7 @@ function buildEN(state) {
     state.base,
     state.detail,
     state.sensual,
-  ];
+  ].filter(Boolean);
   return parts.join(", ");
 }
 
@@ -63,7 +63,7 @@ function buildJP(state) {
     `${findJP(state.base)}`,
     `${findJP(state.detail)}`,
     `${findJP(state.sensual)}`,
-  ];
+  ].filter(Boolean);
   return parts.join("、");
 }
 
