@@ -118,6 +118,46 @@ export const animeOptions = {
     { en: "anime style", jp: "アニメ風" },
     { en: "manga style", jp: "マンガ風" },
     { en: "cel shading", jp: "セル画調" },
+    {
+      en: "modern anime style, clean digital lines, vibrant colors, soft cel shading, polished highlights, detailed backgrounds",
+      jp: "モダンなアニメスタイル、クリーンなデジタル線、鮮やかな色彩、柔らかなセルシェーディング、磨き上げられたハイライト、緻密な背景",
+    },
+    {
+      en: "90s anime style, grainy textures, limited color palette, bold outlines, nostalgic cel shading, retro aesthetics",
+      jp: "90年代アニメ風、ざらついた質感、限られた色数、太いアウトライン、ノスタルジックなセルシェーディング、レトロな美学",
+    },
+    {
+      en: "manga style, monochrome ink, strong line art, screentone shading, expressive facial features",
+      jp: "マンガ風、モノクロインク、力強い線画、スクリーントーンの陰影、表情豊かな顔の特徴",
+    },
+    {
+      en: "pastel anime style, light colors, soft gradients, dreamy atmosphere, delicate line art",
+      jp: "パステルアニメスタイル、淡い色合い、柔らかなグラデーション、夢見心地の雰囲気、繊細な線画",
+    },
+    {
+      en: "ghibli style, painterly backgrounds, natural color palette, soft shading, warm atmosphere",
+      jp: "ジブリ風、絵画のような背景、自然な色調、柔らかな陰影、温かい雰囲気",
+    },
+    {
+      en: "webtoon style, tall vertical composition, glossy highlights, vibrant colors, simplified backgrounds",
+      jp: "ウェブトゥーン風、縦長の構図、光沢のハイライト、鮮やかな色彩、簡略化された背景",
+    },
+    {
+      en: "realistic anime style, semi-realistic proportions, detailed textures, cinematic lighting, subtle shading",
+      jp: "リアルなアニメスタイル、準写実的なプロポーション、細かな質感、映画のようなライティング、繊細な陰影",
+    },
+    {
+      en: "chibi anime style, exaggerated proportions, large heads, simplified details, playful colors",
+      jp: "ちびキャラ風、誇張されたプロポーション、大きな頭、簡略化されたディテール、遊び心のある色彩",
+    },
+    {
+      en: "dark anime style, heavy shadows, muted color palette, dramatic contrast, moody atmosphere",
+      jp: "ダークアニメスタイル、重い影、くすんだ色調、劇的なコントラスト、陰鬱な雰囲気",
+    },
+    {
+      en: "idol anime style, glossy highlights, sparkling eyes, bright vibrant colors, polished clean lines",
+      jp: "アイドルアニメスタイル、光沢のあるハイライト、きらめく瞳、明るく鮮やかな色彩、磨かれたクリーンな線",
+    },
   ],
 };
 
