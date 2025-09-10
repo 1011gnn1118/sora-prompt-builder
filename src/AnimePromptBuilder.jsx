@@ -127,131 +127,143 @@ export default function AnimePromptBuilder() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 pt-6 pb-32 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-        <div className="xl:col-span-2 space-y-6">
-          <Card>
-            <CardHeader title="Character" />
-            <CardContent className="space-y-3">
-              {field("Character Type", (
-                <Select
-                  value={state.characterType}
-                  onChange={(v) => setState({ ...state, characterType: v })}
-                  options={toSelectOptions(animeOptions.characterType)}
-                  allowCustom
-                />
-              ))}
-              {field("Hair Color", (
-                <Select
-                  value={state.hairColor}
-                  onChange={(v) => setState({ ...state, hairColor: v })}
-                  options={toSelectOptions(animeOptions.hairColor)}
-                  allowCustom
-                />
-              ))}
-              {field("Hair Style", (
-                <Select
-                  value={state.hairStyle}
-                  onChange={(v) => setState({ ...state, hairStyle: v })}
-                  options={toSelectOptions(animeOptions.hairStyle)}
-                  allowCustom
-                />
-              ))}
-              {field("Eye Color", (
-                <Select
-                  value={state.eyeColor}
-                  onChange={(v) => setState({ ...state, eyeColor: v })}
-                  options={toSelectOptions(animeOptions.eyeColor)}
-                  allowCustom
-                />
-              ))}
-              {field("Expression", (
-                <Select
-                  value={state.expression}
-                  onChange={(v) => setState({ ...state, expression: v })}
-                  options={toSelectOptions(animeOptions.expression)}
-                  allowCustom
-                />
-              ))}
-            </CardContent>
-          </Card>
+          <div className="xl:col-span-2 space-y-6">
+            <Card>
+              <CardHeader title="Character" />
+              <CardContent className="space-y-3">
+                {field("Character Type", (
+                  <Select
+                    value={state.characterType}
+                    onChange={(v) => setState({ ...state, characterType: v })}
+                    options={toSelectOptions(animeOptions.characterType)}
+                    allowCustom
+                  />
+                ))}
+                {field("Hair Color", (
+                  <Select
+                    value={state.hairColor}
+                    onChange={(v) => setState({ ...state, hairColor: v })}
+                    options={toSelectOptions(animeOptions.hairColor)}
+                    allowCustom
+                  />
+                ))}
+                {field("Hair Style", (
+                  <Select
+                    value={state.hairStyle}
+                    onChange={(v) => setState({ ...state, hairStyle: v })}
+                    options={toSelectOptions(animeOptions.hairStyle)}
+                    allowCustom
+                  />
+                ))}
+                {field("Eye Color", (
+                  <Select
+                    value={state.eyeColor}
+                    onChange={(v) => setState({ ...state, eyeColor: v })}
+                    options={toSelectOptions(animeOptions.eyeColor)}
+                    allowCustom
+                  />
+                ))}
+                {field("Expression", (
+                  <Select
+                    value={state.expression}
+                    onChange={(v) => setState({ ...state, expression: v })}
+                    options={toSelectOptions(animeOptions.expression)}
+                    allowCustom
+                  />
+                ))}
+                {field("Pose", (
+                  <Select
+                    value={state.pose}
+                    onChange={(v) => setState({ ...state, pose: v })}
+                    options={toSelectOptions(animeOptions.pose)}
+                    allowCustom
+                  />
+                ))}
+                {field("Fashion", (
+                  <Select
+                    value={state.fashion}
+                    onChange={(v) => setState({ ...state, fashion: v })}
+                    options={toSelectOptions(animeOptions.fashion)}
+                    allowCustom
+                  />
+                ))}
+                {field("Details", (
+                  <Select
+                    value={state.details}
+                    onChange={(v) => setState({ ...state, details: v })}
+                    options={toSelectOptions(animeOptions.details)}
+                    allowCustom
+                  />
+                ))}
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader title="Scene" />
-            <CardContent className="space-y-3">
-              {field("Pose", (
-                <Select
-                  value={state.pose}
-                  onChange={(v) => setState({ ...state, pose: v })}
-                  options={toSelectOptions(animeOptions.pose)}
-                  allowCustom
-                />
-              ))}
-              {field("Fashion", (
-                <Select
-                  value={state.fashion}
-                  onChange={(v) => setState({ ...state, fashion: v })}
-                  options={toSelectOptions(animeOptions.fashion)}
-                  allowCustom
-                />
-              ))}
-              {field("Background", (
-                <Select
-                  value={state.background}
-                  onChange={(v) => setState({ ...state, background: v })}
-                  options={toSelectOptions(animeOptions.background)}
-                  allowCustom
-                />
-              ))}
-              {field("Mood", (
-                <Select
-                  value={state.mood}
-                  onChange={(v) => setState({ ...state, mood: v })}
-                  options={toSelectOptions(animeOptions.mood)}
-                  allowCustom
-                />
-              ))}
-              {field("Genre", (
-                <Select
-                  value={state.genre}
-                  onChange={(v) => setState({ ...state, genre: v })}
-                  options={toSelectOptions(animeOptions.genre)}
-                  allowCustom
-                />
-              ))}
-              {field("Details", (
-                <Select
-                  value={state.details}
-                  onChange={(v) => setState({ ...state, details: v })}
-                  options={toSelectOptions(animeOptions.details)}
-                  allowCustom
-                />
-              ))}
-              {field("Camera Angle", (
-                <Select
-                  value={state.cameraAngle}
-                  onChange={(v) => setState({ ...state, cameraAngle: v })}
-                  options={toSelectOptions(animeOptions.cameraAngle)}
-                  allowCustom
-                />
-              ))}
-              {field("Zoom", (
-                <Select
-                  value={state.zoom}
-                  onChange={(v) => setState({ ...state, zoom: v })}
-                  options={toSelectOptions(animeOptions.zoom)}
-                  allowCustom
-                />
-              ))}
-              {field("Style", (
-                <Select
-                  value={state.style}
-                  onChange={(v) => setState({ ...state, style: v })}
-                  options={toSelectOptions(animeOptions.style)}
-                  allowCustom
-                />
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+            <Card>
+              <CardHeader title="Scene" />
+              <CardContent className="space-y-3">
+                {field("Background", (
+                  <Select
+                    value={state.background}
+                    onChange={(v) => setState({ ...state, background: v })}
+                    options={toSelectOptions(animeOptions.background)}
+                    allowCustom
+                  />
+                ))}
+                {field("Mood", (
+                  <Select
+                    value={state.mood}
+                    onChange={(v) => setState({ ...state, mood: v })}
+                    options={toSelectOptions(animeOptions.mood)}
+                    allowCustom
+                  />
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader title="Genre" />
+              <CardContent className="space-y-3">
+                {field("Genre", (
+                  <Select
+                    value={state.genre}
+                    onChange={(v) => setState({ ...state, genre: v })}
+                    options={toSelectOptions(animeOptions.genre)}
+                    allowCustom
+                  />
+                ))}
+                {field("Style", (
+                  <Select
+                    value={state.style}
+                    onChange={(v) => setState({ ...state, style: v })}
+                    options={toSelectOptions(animeOptions.style)}
+                    allowCustom
+                  />
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader title="Camera" />
+              <CardContent className="space-y-3">
+                {field("Camera Angle", (
+                  <Select
+                    value={state.cameraAngle}
+                    onChange={(v) => setState({ ...state, cameraAngle: v })}
+                    options={toSelectOptions(animeOptions.cameraAngle)}
+                    allowCustom
+                  />
+                ))}
+                {field("Zoom", (
+                  <Select
+                    value={state.zoom}
+                    onChange={(v) => setState({ ...state, zoom: v })}
+                    options={toSelectOptions(animeOptions.zoom)}
+                    allowCustom
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          </div>
 
         <div className="space-y-6">
           {showPrompt && (
