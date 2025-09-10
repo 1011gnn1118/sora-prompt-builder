@@ -25,6 +25,7 @@ const defaultState = {
   fashion: "sailor-inspired outfit",
   background: "after school classroom",
   mood: "romantic atmosphere",
+  genre: "shōnen (action, friendship, rivalry, coming-of-age)",
   details: "sparkling eyes",
   cameraAngle: "front view",
   zoom: "full body",
@@ -39,6 +40,7 @@ function buildEN(state) {
     `wearing ${state.fashion}`,
     `background: ${state.background}`,
     `mood: ${state.mood}`,
+    `genre: ${state.genre}`,
     `${state.details}`,
     `camera angle: ${state.cameraAngle}`,
     `zoom: ${state.zoom}`,
@@ -58,6 +60,7 @@ function buildJP(state) {
     `${findJP(state.fashion)}`,
     `背景:${findJP(state.background)}`,
     `雰囲気:${findJP(state.mood)}`,
+    `ジャンル:${findJP(state.genre)}`,
     `${findJP(state.details)}`,
     `カメラアングル:${findJP(state.cameraAngle)}`,
     `ズーム:${findJP(state.zoom)}`,
@@ -91,6 +94,7 @@ export default function AnimePromptBuilder() {
       fashion: randomPick(animeOptions.fashion),
       background: randomPick(animeOptions.background),
       mood: randomPick(animeOptions.mood),
+      genre: randomPick(animeOptions.genre),
       details: randomPick(animeOptions.details),
       cameraAngle: randomPick(animeOptions.cameraAngle),
       zoom: randomPick(animeOptions.zoom),
@@ -202,6 +206,14 @@ export default function AnimePromptBuilder() {
                   value={state.mood}
                   onChange={(v) => setState({ ...state, mood: v })}
                   options={toSelectOptions(animeOptions.mood)}
+                  allowCustom
+                />
+              ))}
+              {field("Genre", (
+                <Select
+                  value={state.genre}
+                  onChange={(v) => setState({ ...state, genre: v })}
+                  options={toSelectOptions(animeOptions.genre)}
                   allowCustom
                 />
               ))}
