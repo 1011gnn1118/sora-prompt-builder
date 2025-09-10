@@ -25,6 +25,7 @@ const defaultState = {
   fashion: "sailor-inspired outfit",
   background: "after school classroom",
   mood: "romantic atmosphere",
+  genre: "shōnen (action, friendship, rivalry, coming-of-age)",
   details: "sparkling eyes",
   cameraAngle: "front view",
   zoom: "full body",
@@ -39,6 +40,7 @@ function buildEN(state) {
     `wearing ${state.fashion}`,
     `background: ${state.background}`,
     `mood: ${state.mood}`,
+    `genre: ${state.genre}`,
     `${state.details}`,
     `camera angle: ${state.cameraAngle}`,
     `zoom: ${state.zoom}`,
@@ -58,6 +60,7 @@ function buildJP(state) {
     `${findJP(state.fashion)}`,
     `背景:${findJP(state.background)}`,
     `雰囲気:${findJP(state.mood)}`,
+    `ジャンル:${findJP(state.genre)}`,
     `${findJP(state.details)}`,
     `カメラアングル:${findJP(state.cameraAngle)}`,
     `ズーム:${findJP(state.zoom)}`,
@@ -91,6 +94,7 @@ export default function AnimePromptBuilder() {
       fashion: randomPick(animeOptions.fashion),
       background: randomPick(animeOptions.background),
       mood: randomPick(animeOptions.mood),
+      genre: randomPick(animeOptions.genre),
       details: randomPick(animeOptions.details),
       cameraAngle: randomPick(animeOptions.cameraAngle),
       zoom: randomPick(animeOptions.zoom),
@@ -167,6 +171,22 @@ export default function AnimePromptBuilder() {
                   allowCustom
                 />
               ))}
+              {field("Fashion", (
+                <Select
+                  value={state.fashion}
+                  onChange={(v) => setState({ ...state, fashion: v })}
+                  options={toSelectOptions(animeOptions.fashion)}
+                  allowCustom
+                />
+              ))}
+              {field("Details", (
+                <Select
+                  value={state.details}
+                  onChange={(v) => setState({ ...state, details: v })}
+                  options={toSelectOptions(animeOptions.details)}
+                  allowCustom
+                />
+              ))}
             </CardContent>
           </Card>
 
@@ -178,14 +198,6 @@ export default function AnimePromptBuilder() {
                   value={state.pose}
                   onChange={(v) => setState({ ...state, pose: v })}
                   options={toSelectOptions(animeOptions.pose)}
-                  allowCustom
-                />
-              ))}
-              {field("Fashion", (
-                <Select
-                  value={state.fashion}
-                  onChange={(v) => setState({ ...state, fashion: v })}
-                  options={toSelectOptions(animeOptions.fashion)}
                   allowCustom
                 />
               ))}
@@ -205,14 +217,34 @@ export default function AnimePromptBuilder() {
                   allowCustom
                 />
               ))}
-              {field("Details", (
+              {field("Style", (
                 <Select
-                  value={state.details}
-                  onChange={(v) => setState({ ...state, details: v })}
-                  options={toSelectOptions(animeOptions.details)}
+                  value={state.style}
+                  onChange={(v) => setState({ ...state, style: v })}
+                  options={toSelectOptions(animeOptions.style)}
                   allowCustom
                 />
               ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader title="Genre" />
+            <CardContent className="space-y-3">
+              {field("Genre", (
+                <Select
+                  value={state.genre}
+                  onChange={(v) => setState({ ...state, genre: v })}
+                  options={toSelectOptions(animeOptions.genre)}
+                  allowCustom
+                />
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader title="Camera" />
+            <CardContent className="space-y-3">
               {field("Camera Angle", (
                 <Select
                   value={state.cameraAngle}
@@ -226,14 +258,6 @@ export default function AnimePromptBuilder() {
                   value={state.zoom}
                   onChange={(v) => setState({ ...state, zoom: v })}
                   options={toSelectOptions(animeOptions.zoom)}
-                  allowCustom
-                />
-              ))}
-              {field("Style", (
-                <Select
-                  value={state.style}
-                  onChange={(v) => setState({ ...state, style: v })}
-                  options={toSelectOptions(animeOptions.style)}
                   allowCustom
                 />
               ))}
