@@ -275,7 +275,7 @@ function buildSoraJSON(state, EN) {
   const outer = pref(state.outer, state.outerManual);
   const outfit = outer ? `${outfitBase}, with ${outer}` : outfitBase;
 
-  const prompt = {
+  const details = {
     character: {
       age: pref(state.age, state.ageManual),
       gender: pref(state.gender, state.genderManual),
@@ -310,11 +310,11 @@ function buildSoraJSON(state, EN) {
       mood: pref(state.mood, state.moodManual),
       visual_style: styleArr,
     },
-    text: EN,
   };
 
   return {
-    prompt,
+    prompt: EN,
+    details,
     metadata: state,
   };
 }

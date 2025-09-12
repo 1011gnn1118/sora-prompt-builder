@@ -70,7 +70,7 @@ function buildJP(state) {
 }
 
 function buildAnimeJSON(state, EN) {
-  const prompt = {
+  const details = {
     character: {
       type: state.characterType,
       hair_color: state.hairColor,
@@ -93,11 +93,11 @@ function buildAnimeJSON(state, EN) {
     style: {
       visual_style: state.style,
     },
-    text: EN,
   };
 
   return {
-    prompt,
+    prompt: EN,
+    details,
     metadata: state,
   };
 }
