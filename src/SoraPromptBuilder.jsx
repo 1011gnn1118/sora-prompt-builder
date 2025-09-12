@@ -255,11 +255,10 @@ function buildJapanesePrompt(state) {
   );
 }
 
-function buildSoraJSON(state, EN, JP) {
+function buildSoraJSON(state, EN) {
   return {
     prompt: {
       en: EN,
-      jp: JP,
     },
     camera: {
       shot: pref(state.shot, state.shotManual),
@@ -288,7 +287,7 @@ export default function SoraPromptBuilder() {
   const JP = useMemo(() => buildJapanesePrompt(state), [state]);
 
   const exportJSON = () => {
-    const soraReady = buildSoraJSON(state, EN, JP);
+    const soraReady = buildSoraJSON(state, EN);
     const blob = new Blob([JSON.stringify(soraReady, null, 2)], {
       type: "application/json",
     });
