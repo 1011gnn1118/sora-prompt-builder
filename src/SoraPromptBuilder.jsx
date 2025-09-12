@@ -375,7 +375,6 @@ export default function SoraPromptBuilder() {
           <div className="flex items-center gap-2">
             <Button onClick={randomize} title="Randomize"><Shuffle className="h-4 w-4" />Random</Button>
             <Button variant="subtle" onClick={reset} title="Reset"><RotateCcw className="h-4 w-4" />Reset</Button>
-            <Button variant="ghost" onClick={exportJSON} title="Export JSON"><Download className="h-4 w-4" />Export</Button>
           </div>
         </div>
       </header>
@@ -640,6 +639,14 @@ export default function SoraPromptBuilder() {
                     >
                       <Copy className="h-4 w-4" />
                       {lang === "EN" ? "Copy" : "コピー"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={exportJSON}
+                      title="Export JSON"
+                    >
+                      <Download className="h-4 w-4" />
+                      Export
                     </Button>
                   </div>
                 </div>
