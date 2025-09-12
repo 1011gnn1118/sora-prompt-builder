@@ -69,6 +69,39 @@ function buildJP(state) {
   return parts.join("、");
 }
 
+function buildAnimeJSON(state, EN) {
+  const prompt = {
+    character: {
+      type: state.characterType,
+      hair_color: state.hairColor,
+      hair_style: state.hairStyle,
+      eye_color: state.eyeColor,
+      expression: state.expression,
+      pose: state.pose,
+      fashion: state.fashion,
+      details: state.details,
+    },
+    scene: {
+      background: state.background,
+      mood: state.mood,
+      genre: state.genre,
+    },
+    camera: {
+      angle: state.cameraAngle,
+      zoom: state.zoom,
+    },
+    style: {
+      visual_style: state.style,
+    },
+    text: EN,
+  };
+
+  return {
+    prompt,
+    metadata: state,
+  };
+}
+
 export default function AnimePromptBuilder() {
   const [state, setState] = useState(defaultState);
   const { copy } = useClipboard();
@@ -80,7 +113,10 @@ export default function AnimePromptBuilder() {
   const JP = useMemo(() => buildJP(state), [state]);
 
   const exportJSON = () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const animeReady = buildAnimeJSON(state, EN);
+    const blob = new Blob([JSON.stringify(animeReady, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -303,11 +339,15 @@ export default function AnimePromptBuilder() {
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
-                      onClick={() => copy(lang === "EN" ? EN : JP)}
-                      title={lang === "EN" ? "Copy English" : "Copy Japanese"}
+                      onClick={() =>
+                        copy(
+                          JSON.stringify(buildAnimeJSON(state, EN), null, 2)
+                        )
+                      }
+                      title="Copy JSON"
                     >
                       <Copy className="h-4 w-4" />
-                      {lang === "EN" ? "Copy" : "コピー"}
+                      {lang === "EN" ? "Copy JSON" : "JSONコピー"}
                     </Button>
                     <Button
                       variant="ghost"

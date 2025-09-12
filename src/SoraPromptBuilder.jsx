@@ -701,11 +701,15 @@ export default function SoraPromptBuilder() {
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
-                      onClick={() => copy(lang === "EN" ? EN : JP)}
-                      title={lang === "EN" ? "Copy English" : "Copy Japanese"}
+                      onClick={() =>
+                        copy(
+                          JSON.stringify(buildSoraJSON(state, EN), null, 2)
+                        )
+                      }
+                      title="Copy JSON"
                     >
                       <Copy className="h-4 w-4" />
-                      {lang === "EN" ? "Copy" : "コピー"}
+                      {lang === "EN" ? "Copy JSON" : "JSONコピー"}
                     </Button>
                     <Button
                       variant="ghost"
