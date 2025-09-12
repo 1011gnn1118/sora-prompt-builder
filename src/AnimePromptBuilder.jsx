@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardHeader, CardContent, Button, Select, Textarea } from "./components/ui";
 import { animeOptions, toSelectOptions, findJP } from "./data/animeOptions";
-import { Copy, Shuffle, RotateCcw, Wand2, Languages } from "lucide-react";
+import { Copy, Shuffle, RotateCcw, Wand2, Languages, Download } from "lucide-react";
 
 function useClipboard() {
   const copy = async (text) => {
@@ -78,6 +78,16 @@ export default function AnimePromptBuilder() {
 
   const EN = useMemo(() => buildEN(state), [state]);
   const JP = useMemo(() => buildJP(state), [state]);
+
+  const exportJSON = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `anime_prompt_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   function randomPick(arr) {
     return arr[Math.floor(Math.random() * arr.length)].en;
@@ -298,6 +308,14 @@ export default function AnimePromptBuilder() {
                     >
                       <Copy className="h-4 w-4" />
                       {lang === "EN" ? "Copy" : "コピー"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={exportJSON}
+                      title="Export JSON"
+                    >
+                      <Download className="h-4 w-4" />
+                      Export
                     </Button>
                   </div>
                 </div>
