@@ -255,6 +255,27 @@ function buildJapanesePrompt(state) {
   );
 }
 
+function buildSoraJSON(state, EN, JP) {
+  return {
+    prompt: {
+      en: EN,
+      jp: JP,
+    },
+    camera: {
+      shot: pref(state.shot, state.shotManual),
+      focal_length_mm: Number(state.focalLength),
+      depth_of_field: Number(state.dofStrength),
+      aperture: apertureFromDof(state.dofStrength),
+      focus_subject: state.focusSubject,
+      static_camera: !!state.staticCamera,
+      tripod: !!state.tripod,
+      forbid_eye_contact: !!state.forbidEyeContact,
+      candid_mode: state.candidMode,
+    },
+    metadata: state,
+  };
+}
+
 // ===== MAIN COMPONENT =====
 export default function SoraPromptBuilder() {
   const [state, setState] = useState(defaultState);
@@ -267,7 +288,10 @@ export default function SoraPromptBuilder() {
   const JP = useMemo(() => buildJapanesePrompt(state), [state]);
 
   const exportJSON = () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const soraReady = buildSoraJSON(state, EN, JP);
+    const blob = new Blob([JSON.stringify(soraReady, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
