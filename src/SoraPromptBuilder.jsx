@@ -256,9 +256,43 @@ function buildJapanesePrompt(state) {
 }
 
 function buildSoraJSON(state, EN) {
-  return {
-    prompt: {
-      en: EN,
+  const hair = state.hairStyle.filter(Boolean);
+  if (state.hairExtra?.trim()) hair.push(state.hairExtra.trim());
+  const face = state.face.filter(Boolean);
+  if (state.faceExtra?.trim()) face.push(state.faceExtra.trim());
+  const accessories = state.accessories.filter((a) => a && a !== "no accessories");
+  if (state.accessoriesExtra?.trim()) accessories.push(state.accessoriesExtra.trim());
+
+  const bgDetails = state.bgDetails.filter(Boolean);
+  if (state.bgDetailsExtra?.trim()) bgDetails.push(state.bgDetailsExtra.trim());
+
+  const styleArr = state.style.filter(Boolean);
+  if (state.styleExtra?.trim()) styleArr.push(state.styleExtra.trim());
+
+  const outfitBase =
+    pref(state.dress, state.dressManual) ||
+    `${pref(state.tops, state.topsManual)}, ${pref(state.bottoms, state.bottomsManual)}`;
+  const outer = pref(state.outer, state.outerManual);
+  const outfit = outer ? `${outfitBase}, with ${outer}` : outfitBase;
+
+  const prompt = {
+    character: {
+      age: pref(state.age, state.ageManual),
+      gender: pref(state.gender, state.genderManual),
+      ethnicity: pref(state.ethnicity, state.ethnicityManual),
+      face,
+      hair,
+      makeup: pref(state.makeup, state.makeupManual),
+      eye_color: pref(state.eyeColor, state.eyeColorManual),
+      outfit,
+      accessories,
+      fashion_vibe: pref(state.fashionVibe, state.fashionVibeManual),
+    },
+    scene: {
+      background: pref(state.background, state.backgroundManual),
+      background_details: bgDetails,
+      crowd: !!state.crowd,
+      activity: pref(state.activity, state.activityManual),
     },
     camera: {
       shot: pref(state.shot, state.shotManual),
@@ -271,6 +305,16 @@ function buildSoraJSON(state, EN) {
       forbid_eye_contact: !!state.forbidEyeContact,
       candid_mode: state.candidMode,
     },
+    style: {
+      lighting: pref(state.lighting, state.lightingManual),
+      mood: pref(state.mood, state.moodManual),
+      visual_style: styleArr,
+    },
+    text: EN,
+  };
+
+  return {
+    prompt,
     metadata: state,
   };
 }
