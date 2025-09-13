@@ -27,8 +27,9 @@ const defaultState = {
   mood: "romantic atmosphere",
   genre: "shōnen (action, friendship, rivalry, coming-of-age)",
   details: "sparkling eyes",
-  cameraAngle: "front view",
-  zoom: "full body",
+  shotDistance: "Medium Shot (MS)",
+  shotAngle: "",
+  shotStyle: "",
   style: "anime style",
 };
 
@@ -42,8 +43,7 @@ function buildEN(state) {
     `mood: ${state.mood}`,
     `genre: ${state.genre}`,
     `${state.details}`,
-    `camera angle: ${state.cameraAngle}`,
-    `zoom: ${state.zoom}`,
+    `camera: ${[state.shotDistance, state.shotAngle, state.shotStyle].filter(Boolean).join(", ")}`,
     `style: ${state.style}`,
   ];
   return parts.join(", ");
@@ -62,8 +62,7 @@ function buildJP(state) {
     `雰囲気:${findJP(state.mood)}`,
     `ジャンル:${findJP(state.genre)}`,
     `${findJP(state.details)}`,
-    `カメラアングル:${findJP(state.cameraAngle)}`,
-    `ズーム:${findJP(state.zoom)}`,
+    `カメラ:${[state.shotDistance, state.shotAngle, state.shotStyle].filter(Boolean).map(findJP).join("、")}`,
     `スタイル:${findJP(state.style)}`,
   ];
   return parts.join("、");
@@ -87,8 +86,9 @@ function buildAnimeJSON(state, EN) {
       genre: state.genre,
     },
     camera: {
-      angle: state.cameraAngle,
-      zoom: state.zoom,
+      shot_distance: state.shotDistance,
+      shot_angle: state.shotAngle,
+      shot_style: state.shotStyle,
     },
     style: {
       visual_style: state.style,
@@ -142,8 +142,9 @@ export default function AnimePromptBuilder({ uiLang = "EN" }) {
       mood: randomPick(animeOptions.mood),
       genre: randomPick(animeOptions.genre),
       details: randomPick(animeOptions.details),
-      cameraAngle: randomPick(animeOptions.cameraAngle),
-      zoom: randomPick(animeOptions.zoom),
+      shotDistance: randomPick(animeOptions.shotDistance),
+      shotAngle: randomPick(animeOptions.shotAngle),
+      shotStyle: Math.random() < 0.5 ? randomPick(animeOptions.shotStyle) : "",
       style: randomPick(animeOptions.style),
     });
   };
@@ -291,20 +292,25 @@ export default function AnimePromptBuilder({ uiLang = "EN" }) {
             <Card>
               <CardHeader title="Camera" />
               <CardContent className="space-y-3">
-                {field("Camera Angle", (
+                {field("Shot Distance", (
                   <Select
-                    value={state.cameraAngle}
-                    onChange={(v) => setState({ ...state, cameraAngle: v })}
-                    options={toSelectOptions(animeOptions.cameraAngle, uiLang)}
-                    allowCustom
+                    value={state.shotDistance}
+                    onChange={(v) => setState({ ...state, shotDistance: v })}
+                    options={toSelectOptions(animeOptions.shotDistance, uiLang)}
                   />
                 ))}
-                {field("Zoom", (
+                {field("Angle", (
                   <Select
-                    value={state.zoom}
-                    onChange={(v) => setState({ ...state, zoom: v })}
-                    options={toSelectOptions(animeOptions.zoom, uiLang)}
-                    allowCustom
+                    value={state.shotAngle}
+                    onChange={(v) => setState({ ...state, shotAngle: v })}
+                    options={toSelectOptions(animeOptions.shotAngle, uiLang)}
+                  />
+                ))}
+                {field("Special", (
+                  <Select
+                    value={state.shotStyle}
+                    onChange={(v) => setState({ ...state, shotStyle: v })}
+                    options={toSelectOptions(animeOptions.shotStyle, uiLang)}
                   />
                 ))}
               </CardContent>
