@@ -46,6 +46,11 @@ export const options = {
     { en: "curly bob", jp: "カールのボブ" },
     { en: "double braids", jp: "二つ編み" },
   ],
+  hairColor: [
+    { en: "platinum blonde", jp: "プラチナブロンド" },
+    { en: "jet black", jp: "漆黒" },
+    { en: "pastel pink", jp: "パステルピンク" },
+  ],
   makeup: [
     { en: "none", jp: "メイクなし" },
     { en: "natural makeup", jp: "ナチュラルメイク" },
@@ -126,6 +131,8 @@ export const options = {
     { en: "beanie hat", jp: "ビーニー帽" },
     { en: "backpack", jp: "バックパック" },
     { en: "fingerless gloves", jp: "指なし手袋" },
+    { en: "aviator sunglasses", jp: "アビエーターサングラス" },
+    { en: "piercings", jp: "ピアス" },
   ],
   fashionVibes: [
     { en: "fashionable", jp: "ファッショナブル" },
@@ -184,6 +191,12 @@ export const options = {
     { en: "extreme close-up", jp: "エクストリームクローズアップ" },
     { en: "over-the-shoulder shot", jp: "肩越しショット" },
   ],
+  cameraLens: [
+    { en: "Fisheye (8mm)", jp: "フィッシュアイ(8mm)" },
+    { en: "Wide-angle (24mm)", jp: "広角(24mm)" },
+    { en: "Portrait (85mm)", jp: "ポートレート(85mm)" },
+    { en: "Telephoto (200mm)", jp: "望遠(200mm)" },
+  ],
   lighting: [
     { en: "soft desk lamp + ambient practicals", jp: "柔らかなデスクランプ＋室内の実用光" },
     { en: "cinematic low-key lighting", jp: "シネマ調のローキー照明" },
@@ -213,6 +226,21 @@ export const options = {
     { en: "washed-out 90s photo", jp: "色あせた90年代写真" },
     { en: "VHS tape artifacts", jp: "VHSテープのノイズ" },
     { en: "handheld camcorder style", jp: "ハンディカム風" },
+    { en: "Portra 400", jp: "Portra 400" },
+    { en: "Cinestill 800", jp: "Cinestill 800" },
+    { en: "Kodak Gold", jp: "Kodak Gold" },
+    { en: "Fujifilm Superia", jp: "Fujifilm Superia" },
+    { en: "Black & White Ilford", jp: "モノクロIlford" },
+    { en: "Direct flash", jp: "直射フラッシュ" },
+    { en: "Heavy grain", jp: "強い粒子" },
+    { en: "Dusty frame", jp: "ほこりっぽいフレーム" },
+    { en: "Film imperfections", jp: "フィルムの欠陥" },
+    { en: "Clean digital look", jp: "クリーンなデジタル風" },
+    { en: "Vogue editorial", jp: "Vogueエディトリアル" },
+    { en: "Surreal / Otherworldly", jp: "シュール／異世界的" },
+    { en: "Dark cinematic tones", jp: "ダークなシネマ調トーン" },
+    { en: "Neon cyberpunk", jp: "ネオン・サイバーパンク" },
+    { en: "Fashion-forward couture", jp: "最先端のクチュール" },
   ],
 };
 
