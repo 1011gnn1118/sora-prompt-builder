@@ -102,7 +102,7 @@ function buildAnimeJSON(state, EN) {
   };
 }
 
-export default function AnimePromptBuilder() {
+export default function AnimePromptBuilder({ uiLang = "EN" }) {
   const [state, setState] = useState(defaultState);
   const { copy } = useClipboard();
 
@@ -181,7 +181,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.characterType}
                     onChange={(v) => setState({ ...state, characterType: v })}
-                    options={toSelectOptions(animeOptions.characterType)}
+                    options={toSelectOptions(animeOptions.characterType, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -189,7 +189,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.hairColor}
                     onChange={(v) => setState({ ...state, hairColor: v })}
-                    options={toSelectOptions(animeOptions.hairColor)}
+                    options={toSelectOptions(animeOptions.hairColor, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -197,7 +197,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.hairStyle}
                     onChange={(v) => setState({ ...state, hairStyle: v })}
-                    options={toSelectOptions(animeOptions.hairStyle)}
+                    options={toSelectOptions(animeOptions.hairStyle, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -205,7 +205,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.eyeColor}
                     onChange={(v) => setState({ ...state, eyeColor: v })}
-                    options={toSelectOptions(animeOptions.eyeColor)}
+                    options={toSelectOptions(animeOptions.eyeColor, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -213,7 +213,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.expression}
                     onChange={(v) => setState({ ...state, expression: v })}
-                    options={toSelectOptions(animeOptions.expression)}
+                    options={toSelectOptions(animeOptions.expression, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -221,7 +221,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.pose}
                     onChange={(v) => setState({ ...state, pose: v })}
-                    options={toSelectOptions(animeOptions.pose)}
+                    options={toSelectOptions(animeOptions.pose, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -229,7 +229,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.fashion}
                     onChange={(v) => setState({ ...state, fashion: v })}
-                    options={toSelectOptions(animeOptions.fashion)}
+                    options={toSelectOptions(animeOptions.fashion, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -237,7 +237,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.details}
                     onChange={(v) => setState({ ...state, details: v })}
-                    options={toSelectOptions(animeOptions.details)}
+                    options={toSelectOptions(animeOptions.details, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -251,7 +251,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.background}
                     onChange={(v) => setState({ ...state, background: v })}
-                    options={toSelectOptions(animeOptions.background)}
+                    options={toSelectOptions(animeOptions.background, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -259,7 +259,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.mood}
                     onChange={(v) => setState({ ...state, mood: v })}
-                    options={toSelectOptions(animeOptions.mood)}
+                    options={toSelectOptions(animeOptions.mood, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -273,7 +273,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.genre}
                     onChange={(v) => setState({ ...state, genre: v })}
-                    options={toSelectOptions(animeOptions.genre)}
+                    options={toSelectOptions(animeOptions.genre, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -281,7 +281,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.style}
                     onChange={(v) => setState({ ...state, style: v })}
-                    options={toSelectOptions(animeOptions.style)}
+                    options={toSelectOptions(animeOptions.style, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -295,7 +295,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.cameraAngle}
                     onChange={(v) => setState({ ...state, cameraAngle: v })}
-                    options={toSelectOptions(animeOptions.cameraAngle)}
+                    options={toSelectOptions(animeOptions.cameraAngle, uiLang)}
                     allowCustom
                   />
                 ))}
@@ -303,7 +303,7 @@ export default function AnimePromptBuilder() {
                   <Select
                     value={state.zoom}
                     onChange={(v) => setState({ ...state, zoom: v })}
-                    options={toSelectOptions(animeOptions.zoom)}
+                    options={toSelectOptions(animeOptions.zoom, uiLang)}
                     allowCustom
                   />
                 ))}

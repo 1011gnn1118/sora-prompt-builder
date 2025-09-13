@@ -216,7 +216,11 @@ export const options = {
   ],
 };
 
-export const toSelectOptions = (arr) => arr.map((i) => ({ value: i.en, label: i.en }));
+// Convert option objects to Select component friendly format.
+// `lang` determines which label (English or Japanese) is shown while the value
+// remains in English so that exported JSON stays consistent.
+export const toSelectOptions = (arr, lang = "EN") =>
+  arr.map((i) => ({ value: i.en, label: lang === "JP" ? i.jp : i.en }));
 
 export function findJP(en) {
   for (const group of Object.values(options)) {
