@@ -46,6 +46,8 @@ const defaultState = {
   faceExtra: "",
   hairStyle: ["long straight", "side bangs", "low ponytail"],
   hairExtra: "",
+  hairColor: "platinum blonde",
+  hairColorManual: "",
   makeup: "natural makeup",
   makeupManual: "",
   eyeColor: "dark brown",
@@ -79,6 +81,7 @@ const defaultState = {
   // Camera
   shot: "medium shot",
   shotManual: "",
+  lens: "",
   focalLength: 50,
   dofStrength: 35, // 0–100
   focusSubject: "eyes",
@@ -173,12 +176,12 @@ function buildEnglishPrompt(state) {
 
   const lines = [
     `A ${subject} subject with ${face}.`,
-    `Hairstyle: ${hair}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
+    `Hairstyle: ${hair}. Hair color: ${pref(state.hairColor, state.hairColorManual)}. Makeup: ${pref(state.makeup, state.makeupManual)}. Eye color: ${pref(state.eyeColor, state.eyeColorManual)}.`,
     `Outfit: ${outfit}.`,
     fashionVibe ? `Fashion vibe: ${fashionVibe}.` : "",
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
     `Action: ${pref(state.activity, state.activityManual)}${actionRepetition}${state.forbidEyeContact ? ", never looking toward the camera" : ""}.`,
-    `Camera: ${pref(state.shot, state.shotManual)}, ${state.focalLength}mm lens, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
+    `Camera: ${pref(state.shot, state.shotManual)}, ${state.lens || `${state.focalLength}mm lens`}, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
     `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}${moodExtra}. Visual style: ${style}.`,
   ];
 
@@ -224,6 +227,8 @@ function buildJapanesePrompt(state) {
   const fullBodyGuarantee = state.shot.includes("full body") ? "、頭からつま先まで完全に写っており、クロップされない" : "";
   const actionRepetition = "。動作は明確に画面に収められ、繰り返し持続的に主要な要素として強調される";
 
+  const lensJP = state.lens ? findJP(state.lens) : `${state.focalLength}mm`;
+
   const ageJP = pref(state.age, state.ageManual);
   const subjectLine = `${ageJP ? findJP(ageJP) + "の" : ""}${findJP(pref(state.gender, state.genderManual))}、${findJP(pref(state.ethnicity, state.ethnicityManual))}の雰囲気。顔立ち：${faceArr.join("、")}。`;
 
@@ -237,12 +242,12 @@ function buildJapanesePrompt(state) {
 
   const lines = [
     subjectLine,
-    `ヘア：${hairArr.join("、")}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
+    `ヘア：${hairArr.join("、")}。髪色：${findJP(pref(state.hairColor, state.hairColorManual))}。メイク：${findJP(pref(state.makeup, state.makeupManual))}。瞳の色：${findJP(pref(state.eyeColor, state.eyeColorManual))}。`,
     `服装：${outfitJP}。`,
     fashionJP ? `ファッションの雰囲気：${findJP(fashionJP)}。` : "",
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
     `動作：${findJP(pref(state.activity, state.activityManual))}${actionRepetition}${state.forbidEyeContact ? "。視線は対象に固定され、カメラを見ることはない" : ""}。`,
-    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${state.focalLength}mm、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
+    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${lensJP}、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
     `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}${moodExtra}。ビジュアル：${styleArr.join("、")}。`,
   ];
 
@@ -282,6 +287,7 @@ function buildSoraJSON(state, EN) {
       ethnicity: pref(state.ethnicity, state.ethnicityManual),
       face,
       hair,
+      hair_color: pref(state.hairColor, state.hairColorManual),
       makeup: pref(state.makeup, state.makeupManual),
       eye_color: pref(state.eyeColor, state.eyeColorManual),
       outfit,
@@ -296,6 +302,7 @@ function buildSoraJSON(state, EN) {
     },
     camera: {
       shot: pref(state.shot, state.shotManual),
+      lens: state.lens,
       focal_length_mm: Number(state.focalLength),
       depth_of_field: Number(state.dofStrength),
       aperture: apertureFromDof(state.dofStrength),
@@ -354,6 +361,8 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
   const randomize = () => {
     setSeed((s) => s + 1);
     const useDress = Math.random() < 0.5;
+    const lens = randomPick(options.cameraLens);
+    const lensMM = parseInt(lens.match(/(\d+)/)?.[1] || "50", 10);
     setState((prev) => ({
       ...prev,
       age: randomPick(options.age),
@@ -365,6 +374,8 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
       faceExtra: "",
       hairStyle: randomSubset(options.hairStyle, 1, 3),
       hairExtra: "",
+      hairColor: randomPick(options.hairColor),
+      hairColorManual: "",
       makeup: randomPick(options.makeup),
       makeupManual: "",
       eyeColor: randomPick(options.eyeColor),
@@ -390,7 +401,8 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
       activityManual: "",
       shot: randomPick(options.shot),
       shotManual: "",
-      focalLength: [35, 50, 85][Math.floor(Math.random() * 3)],
+      lens,
+      focalLength: lensMM,
       dofStrength: Math.floor(Math.random() * 80) + 10,
       focusSubject: ["eyes", "eyelashes", "face", "hands", "book"][Math.floor(Math.random() * 5)],
       lighting: randomPick(options.lighting),
@@ -477,6 +489,13 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
                 <div className="space-y-2">
                   {multiPills(state.hairStyle, (vals) => setState({ ...state, hairStyle: vals }), options.hairStyle)}
                   <Input value={state.hairExtra} onChange={(v) => setState({ ...state, hairExtra: v })} placeholder="e.g. loose strands, tucked behind ear" />
+                </div>
+              ))}
+
+              {field("Hair color", (
+                <div className="space-y-2">
+                  <Select value={state.hairColor} onChange={(v) => setState({ ...state, hairColor: v })} options={toSelectOptions(options.hairColor, uiLang)} />
+                  <Input value={state.hairColorManual} onChange={(v) => setState({ ...state, hairColorManual: v })} placeholder="e.g. ash brown" />
                 </div>
               ))}
 
@@ -589,6 +608,16 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
                   <Select value={state.shot} onChange={(v) => setState({ ...state, shot: v })} options={toSelectOptions(options.shot, uiLang)} />
                   <Input value={state.shotManual} onChange={(v) => setState({ ...state, shotManual: v })} placeholder="e.g. tight medium, slight high angle" />
                 </div>
+              ))}
+              {field("Lens", (
+                <Select
+                  value={state.lens}
+                  onChange={(v) => {
+                    const mm = parseInt(v.match(/(\d+)/)?.[1] || state.focalLength, 10);
+                    setState({ ...state, lens: v, focalLength: mm });
+                  }}
+                  options={toSelectOptions(options.cameraLens, uiLang)}
+                />
               ))}
               {field("Focal length (mm)", (
                 <Input type="number" value={state.focalLength} onChange={(v) => setState({ ...state, focalLength: v })} min={18} max={135} step={1} />
