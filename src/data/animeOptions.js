@@ -240,7 +240,11 @@ export const animeOptions = {
   ],
 };
 
-export const toSelectOptions = (arr) => arr.map((i) => ({ value: i.en, label: i.en }));
+// Same as in options.js but for anime-specific groups.
+// Labels switch between English and Japanese based on `lang` while values stay
+// in English to keep JSON output unaffected.
+export const toSelectOptions = (arr, lang = "EN") =>
+  arr.map((i) => ({ value: i.en, label: lang === "JP" ? i.jp : i.en }));
 
 export function findJP(en) {
   for (const group of Object.values(animeOptions)) {

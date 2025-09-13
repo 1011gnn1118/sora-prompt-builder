@@ -320,7 +320,7 @@ function buildSoraJSON(state, EN) {
 }
 
 // ===== MAIN COMPONENT =====
-export default function SoraPromptBuilder() {
+export default function SoraPromptBuilder({ uiLang = "EN" }) {
   const [state, setState] = useState(defaultState);
   const [seed, setSeed] = useState(0);
   const { copy } = useClipboard();
@@ -423,7 +423,7 @@ export default function SoraPromptBuilder() {
             onClick={() => setValues(active ? values.filter((v) => v !== opt.en) : [...values, opt.en])}
             className={`px-2.5 py-1 rounded-full text-xs border ${active ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"}`}
           >
-            {opt.en}
+            {uiLang === "JP" ? opt.jp : opt.en}
           </button>
         );
       })}
@@ -455,13 +455,13 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Age", (
                 <div className="space-y-2">
-                  <Select value={state.age} onChange={(v) => setState({ ...state, age: v })} options={[{ value: "", label: "" }, ...toSelectOptions(options.age)]} />
+                  <Select value={state.age} onChange={(v) => setState({ ...state, age: v })} options={[{ value: "", label: "" }, ...toSelectOptions(options.age, uiLang)]} />
                   <Input value={state.ageManual} onChange={(v) => setState({ ...state, ageManual: v })} placeholder="e.g. early 20s" />
                 </div>
               ))}
               {field("Ethnicity / Vibe", (
                 <div className="space-y-2">
-                  <Select value={state.ethnicity} onChange={(v) => setState({ ...state, ethnicity: v })} options={toSelectOptions(options.ethnicity)} />
+                  <Select value={state.ethnicity} onChange={(v) => setState({ ...state, ethnicity: v })} options={toSelectOptions(options.ethnicity, uiLang)} />
                   <Input value={state.ethnicityManual} onChange={(v) => setState({ ...state, ethnicityManual: v })} placeholder="e.g. Japanese-Taiwanese vibe" />
                 </div>
               ))}
@@ -482,14 +482,14 @@ export default function SoraPromptBuilder() {
 
               {field("Makeup", (
                 <div className="space-y-2">
-                  <Select value={state.makeup} onChange={(v) => setState({ ...state, makeup: v })} options={toSelectOptions(options.makeup)} />
+                  <Select value={state.makeup} onChange={(v) => setState({ ...state, makeup: v })} options={toSelectOptions(options.makeup, uiLang)} />
                   <Input value={state.makeupManual} onChange={(v) => setState({ ...state, makeupManual: v })} placeholder="e.g. natural base, subtle eyeliner" />
                 </div>
               ))}
 
               {field("Eye color", (
                 <div className="space-y-2">
-                  <Select value={state.eyeColor} onChange={(v) => setState({ ...state, eyeColor: v })} options={toSelectOptions(options.eyeColor)} />
+                  <Select value={state.eyeColor} onChange={(v) => setState({ ...state, eyeColor: v })} options={toSelectOptions(options.eyeColor, uiLang)} />
                   <Input value={state.eyeColorManual} onChange={(v) => setState({ ...state, eyeColorManual: v })} placeholder="e.g. deep umber" />
                 </div>
               ))}
@@ -502,13 +502,13 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Tops", (
                 <div className="space-y-2">
-                  <Select value={state.tops} onChange={(v) => setState({ ...state, tops: v })} options={toSelectOptions(options.tops)} />
+                  <Select value={state.tops} onChange={(v) => setState({ ...state, tops: v })} options={toSelectOptions(options.tops, uiLang)} />
                   <Input value={state.topsManual} onChange={(v) => setState({ ...state, topsManual: v })} placeholder="e.g. silky blouse with a deep V-neckline (subtle)" />
                 </div>
               ))}
               {field("Bottoms", (
                 <div className="space-y-2">
-                  <Select value={state.bottoms} onChange={(v) => setState({ ...state, bottoms: v })} options={toSelectOptions(options.bottoms)} />
+                  <Select value={state.bottoms} onChange={(v) => setState({ ...state, bottoms: v })} options={toSelectOptions(options.bottoms, uiLang)} />
                   <Input value={state.bottomsManual} onChange={(v) => setState({ ...state, bottomsManual: v })} placeholder="e.g. sleek high-waist mini skirt / tapered trousers" />
                 </div>
               ))}
@@ -517,7 +517,7 @@ export default function SoraPromptBuilder() {
                   <Select
                     value={state.dress}
                     onChange={(v) => setState({ ...state, dress: v })}
-                    options={[{ value: "", label: "" }, ...toSelectOptions(options.fashionDresses)]}
+                    options={[{ value: "", label: "" }, ...toSelectOptions(options.fashionDresses, uiLang)]}
                   />
                   <Input
                     value={state.dressManual}
@@ -528,7 +528,7 @@ export default function SoraPromptBuilder() {
               ))}
               {field("Outer", (
                 <div className="space-y-2">
-                  <Select value={state.outer} onChange={(v) => setState({ ...state, outer: v })} options={toSelectOptions(options.outer)} />
+                  <Select value={state.outer} onChange={(v) => setState({ ...state, outer: v })} options={toSelectOptions(options.outer, uiLang)} />
                   <Input value={state.outerManual} onChange={(v) => setState({ ...state, outerManual: v })} placeholder="e.g. none / cardigan / blazer" />
                 </div>
               ))}
@@ -540,7 +540,7 @@ export default function SoraPromptBuilder() {
               ))}
               {field("Fashion vibe", (
                 <div className="space-y-2">
-                  <Select value={state.fashionVibe} onChange={(v) => setState({ ...state, fashionVibe: v })} options={toSelectOptions(options.fashionVibes)} />
+                  <Select value={state.fashionVibe} onChange={(v) => setState({ ...state, fashionVibe: v })} options={toSelectOptions(options.fashionVibes, uiLang)} />
                   <Input value={state.fashionVibeManual} onChange={(v) => setState({ ...state, fashionVibeManual: v })} placeholder="e.g. urban casual chic" />
                 </div>
               ))}
@@ -553,7 +553,7 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Background", (
                 <div className="space-y-2">
-                  <Select value={state.background} onChange={(v) => setState({ ...state, background: v })} options={toSelectOptions(options.background)} />
+                  <Select value={state.background} onChange={(v) => setState({ ...state, background: v })} options={toSelectOptions(options.background, uiLang)} />
                   <Input value={state.backgroundManual} onChange={(v) => setState({ ...state, backgroundManual: v })} placeholder="e.g. large window with city lights" />
                 </div>
               ))}
@@ -573,7 +573,7 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Activity", (
                 <div className="space-y-2">
-                  <Select value={state.activity} onChange={(v) => setState({ ...state, activity: v })} options={toSelectOptions(options.activity)} />
+                  <Select value={state.activity} onChange={(v) => setState({ ...state, activity: v })} options={toSelectOptions(options.activity, uiLang)} />
                   <Input value={state.activityManual} onChange={(v) => setState({ ...state, activityManual: v })} placeholder="e.g. organizing study notes, highlighting text" />
                 </div>
               ))}
@@ -586,7 +586,7 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Shot type", (
                 <div className="space-y-2">
-                  <Select value={state.shot} onChange={(v) => setState({ ...state, shot: v })} options={toSelectOptions(options.shot)} />
+                  <Select value={state.shot} onChange={(v) => setState({ ...state, shot: v })} options={toSelectOptions(options.shot, uiLang)} />
                   <Input value={state.shotManual} onChange={(v) => setState({ ...state, shotManual: v })} placeholder="e.g. tight medium, slight high angle" />
                 </div>
               ))}
@@ -626,13 +626,13 @@ export default function SoraPromptBuilder() {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Lighting", (
                 <div className="space-y-2">
-                  <Select value={state.lighting} onChange={(v) => setState({ ...state, lighting: v })} options={toSelectOptions(options.lighting)} />
+                  <Select value={state.lighting} onChange={(v) => setState({ ...state, lighting: v })} options={toSelectOptions(options.lighting, uiLang)} />
                   <Input value={state.lightingManual} onChange={(v) => setState({ ...state, lightingManual: v })} placeholder="e.g. soft lamp + faint neon spill" />
                 </div>
               ))}
               {field("Mood", (
                 <div className="space-y-2">
-                  <Select value={state.mood} onChange={(v) => setState({ ...state, mood: v })} options={toSelectOptions(options.mood)} />
+                  <Select value={state.mood} onChange={(v) => setState({ ...state, mood: v })} options={toSelectOptions(options.mood, uiLang)} />
                   <Input value={state.moodManual} onChange={(v) => setState({ ...state, moodManual: v })} placeholder="e.g. serene, quietly determined" />
                 </div>
               ))}
