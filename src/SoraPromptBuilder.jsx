@@ -79,7 +79,9 @@ const defaultState = {
   activityManual: "",
 
   // Camera
-  shot: "medium shot",
+  shotDistance: "Medium Shot (MS)",
+  shotAngle: "",
+  shotStyle: "",
   shotManual: "",
   lens: "",
   focalLength: 50,
@@ -156,7 +158,11 @@ function buildEnglishPrompt(state) {
 
   const moodExtra = state.candidMode !== "none" ? ", candid, natural, unposed" : "";
 
-  const fullBodyGuarantee = state.shot.includes("full body") ? ", the entire figure fully visible from head to toe, never cropped" : "";
+  const shotParts = [state.shotDistance, state.shotAngle, state.shotStyle].filter(Boolean);
+  const shotCombined = shotParts.join(", ");
+  const fullBodyGuarantee = ["Long Shot (LS)", "Extreme Long Shot (ELS)"].includes(state.shotDistance)
+    ? ", the entire figure fully visible from head to toe, never cropped"
+    : "";
   const actionRepetition = ", the motion is clearly captured and repeated continuously as a central sustained action";
 
   const subjectParts = [];
@@ -181,7 +187,7 @@ function buildEnglishPrompt(state) {
     fashionVibe ? `Fashion vibe: ${fashionVibe}.` : "",
     `Scene: ${pref(state.background, state.backgroundManual)}${bgText}; ${crowd}.`,
     `Action: ${pref(state.activity, state.activityManual)}${actionRepetition}${state.forbidEyeContact ? ", never looking toward the camera" : ""}.`,
-    `Camera: ${pref(state.shot, state.shotManual)}, ${state.lens || `${state.focalLength}mm lens`}, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
+    `Camera: ${pref(shotCombined, state.shotManual)}, ${state.lens || `${state.focalLength}mm lens`}, ${aperture}, focus on ${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}.`,
     `Lighting: ${pref(state.lighting, state.lightingManual)}. Mood: ${pref(state.mood, state.moodManual)}${moodExtra}. Visual style: ${style}.`,
   ];
 
@@ -224,7 +230,10 @@ function buildJapanesePrompt(state) {
   else if (state.candidMode === "close") candidStr = "、至近距離から覗き見るようなアンポーズの密着ショット";
   const moodExtra = state.candidMode !== "none" ? "、スナップ的・自然体・演出感のない雰囲気" : "";
 
-  const fullBodyGuarantee = state.shot.includes("full body") ? "、頭からつま先まで完全に写っており、クロップされない" : "";
+  const shotPartsJP = [state.shotDistance, state.shotAngle, state.shotStyle].filter(Boolean);
+  const fullBodyGuarantee = ["Long Shot (LS)", "Extreme Long Shot (ELS)"].includes(state.shotDistance)
+    ? "、頭からつま先まで完全に写っており、クロップされない"
+    : "";
   const actionRepetition = "。動作は明確に画面に収められ、繰り返し持続的に主要な要素として強調される";
 
   const lensJP = state.lens ? findJP(state.lens) : `${state.focalLength}mm`;
@@ -247,7 +256,7 @@ function buildJapanesePrompt(state) {
     fashionJP ? `ファッションの雰囲気：${findJP(fashionJP)}。` : "",
     `シーン：${findJP(pref(state.background, state.backgroundManual))}${bgText}。${crowd}。`,
     `動作：${findJP(pref(state.activity, state.activityManual))}${actionRepetition}${state.forbidEyeContact ? "。視線は対象に固定され、カメラを見ることはない" : ""}。`,
-    `カメラ：${findJP(pref(state.shot, state.shotManual))}、${lensJP}、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
+    `カメラ：${state.shotManual?.trim() ? state.shotManual : shotPartsJP.map(findJP).join("、")}、${lensJP}、${aperture}、フォーカスは${state.focusSubject}${staticStr}${tripodStr}${candidStr}${forbidEyeStr}${fullBodyGuarantee}。`,
     `ライティング：${findJP(pref(state.lighting, state.lightingManual))}。ムード：${findJP(pref(state.mood, state.moodManual))}${moodExtra}。ビジュアル：${styleArr.join("、")}。`,
   ];
 
@@ -301,7 +310,11 @@ function buildSoraJSON(state, EN) {
       activity: pref(state.activity, state.activityManual),
     },
     camera: {
-      shot: pref(state.shot, state.shotManual),
+      shot: pref([state.shotDistance, state.shotAngle, state.shotStyle].filter(Boolean).join(", "), state.shotManual),
+      shot_distance: state.shotDistance,
+      shot_angle: state.shotAngle,
+      shot_style: state.shotStyle,
+      shot_manual: state.shotManual,
       lens: state.lens,
       focal_length_mm: Number(state.focalLength),
       depth_of_field: Number(state.dofStrength),
@@ -399,7 +412,9 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
       crowd: Math.random() < 0.4,
       activity: randomPick(options.activity),
       activityManual: "",
-      shot: randomPick(options.shot),
+      shotDistance: randomPick(options.shotDistance),
+      shotAngle: randomPick(options.shotAngle),
+      shotStyle: Math.random() < 0.5 ? randomPick(options.shotStyle) : "",
       shotManual: "",
       lens,
       focalLength: lensMM,
@@ -603,10 +618,28 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
           <Card>
             <CardHeader title="Camera" subtitle="Shot, focal length, depth-of-field, and movement or candid controls." right={<CameraOff className="h-5 w-5 text-gray-500" />} />
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {field("Shot type", (
+              {field("Shot", (
                 <div className="space-y-2">
-                  <Select value={state.shot} onChange={(v) => setState({ ...state, shot: v })} options={toSelectOptions(options.shot, uiLang)} />
-                  <Input value={state.shotManual} onChange={(v) => setState({ ...state, shotManual: v })} placeholder="e.g. tight medium, slight high angle" />
+                  <Select
+                    value={state.shotDistance}
+                    onChange={(v) => setState({ ...state, shotDistance: v })}
+                    options={toSelectOptions(options.shotDistance, uiLang)}
+                  />
+                  <Select
+                    value={state.shotAngle}
+                    onChange={(v) => setState({ ...state, shotAngle: v })}
+                    options={toSelectOptions(options.shotAngle, uiLang)}
+                  />
+                  <Select
+                    value={state.shotStyle}
+                    onChange={(v) => setState({ ...state, shotStyle: v })}
+                    options={toSelectOptions(options.shotStyle, uiLang)}
+                  />
+                  <Input
+                    value={state.shotManual}
+                    onChange={(v) => setState({ ...state, shotManual: v })}
+                    placeholder="e.g. Dutch angle, tracking shot"
+                  />
                 </div>
               ))}
               {field("Lens", (
