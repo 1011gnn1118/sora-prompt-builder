@@ -51,6 +51,7 @@ export const Select = ({
   options,
   className = "",
   allowCustom = false,
+  customPlaceholder = "e.g.",
 }) => (
   <>
     <select
@@ -68,7 +69,7 @@ export const Select = ({
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="e.g."
+        placeholder={customPlaceholder}
         className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm mt-2 ${className}`}
       />
     )}
