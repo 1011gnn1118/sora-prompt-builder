@@ -268,11 +268,10 @@ export const options = {
 // `lang` determines which label (English or Japanese) is shown while the value
 // remains in English so that exported JSON stays consistent.
 export const toSelectOptions = (arr, lang = "EN") => {
-  const noneLabel = lang === "JP" ? "何も選択していない" : "Nothing selected";
   const mapped = arr
     .filter((i) => i.en)
     .map((i) => ({ value: i.en, label: lang === "JP" ? i.jp : i.en }));
-  return [{ value: "", label: noneLabel }, ...mapped];
+  return [{ value: "", label: "" }, ...mapped];
 };
 
 export function findJP(en) {

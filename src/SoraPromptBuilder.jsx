@@ -448,9 +448,8 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
         className={`px-2.5 py-1 rounded-full text-xs border ${
           values.length === 0 ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"
         }`}
-      >
-        {uiLang === "JP" ? "何も選択していない" : "Nothing selected"}
-      </button>
+        aria-label={uiLang === "JP" ? "何も選択していない" : "Nothing selected"}
+      ></button>
       {pool.map((opt) => {
         const active = values.includes(opt.en);
         return (
@@ -564,7 +563,7 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
                   <Select
                     value={state.dress}
                     onChange={(v) => setState({ ...state, dress: v })}
-                    options={[{ value: "", label: "" }, ...toSelectOptions(options.fashionDresses, uiLang)]}
+                    options={toSelectOptions(options.fashionDresses, uiLang)}
                   />
                   <Input
                     value={state.dressManual}
