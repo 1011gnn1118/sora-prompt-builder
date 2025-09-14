@@ -445,11 +445,9 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
       <button
         key="__none"
         onClick={() => setValues([])}
-        className={`px-2.5 py-1 rounded-full text-xs border ${
-          values.length === 0 ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"
-        }`}
-        aria-label={uiLang === "JP" ? "何も選択していない" : "Nothing selected"}
-      ></button>
+        className="sr-only"
+        aria-label={uiLang === "JP" ? "すべて解除" : "Clear all selections"}
+      />
       {pool.map((opt) => {
         const active = values.includes(opt.en);
         return (
@@ -494,7 +492,11 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {field("Age", (
                 <div className="space-y-2">
-                  <Select value={state.age} onChange={(v) => setState({ ...state, age: v })} options={[{ value: "", label: "" }, ...toSelectOptions(options.age, uiLang)]} />
+                  <Select
+                    value={state.age}
+                    onChange={(v) => setState({ ...state, age: v })}
+                    options={toSelectOptions(options.age, uiLang)}
+                  />
                   <Input value={state.ageManual} onChange={(v) => setState({ ...state, ageManual: v })} placeholder="e.g. early 20s" />
                 </div>
               ))}
