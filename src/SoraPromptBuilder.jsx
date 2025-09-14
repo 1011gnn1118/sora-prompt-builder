@@ -442,13 +442,26 @@ export default function SoraPromptBuilder({ uiLang = "EN" }) {
 
   const multiPills = (values, setValues, pool) => (
     <div className="flex flex-wrap gap-2">
+      <button
+        key="__none"
+        onClick={() => setValues([])}
+        className={`px-2.5 py-1 rounded-full text-xs border ${
+          values.length === 0 ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"
+        }`}
+      >
+        {uiLang === "JP" ? "何も選択していない" : "Nothing selected"}
+      </button>
       {pool.map((opt) => {
         const active = values.includes(opt.en);
         return (
           <button
             key={opt.en}
-            onClick={() => setValues(active ? values.filter((v) => v !== opt.en) : [...values, opt.en])}
-            className={`px-2.5 py-1 rounded-full text-xs border ${active ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"}`}
+            onClick={() =>
+              setValues(active ? values.filter((v) => v !== opt.en) : [...values, opt.en])
+            }
+            className={`px-2.5 py-1 rounded-full text-xs border ${
+              active ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300"
+            }`}
           >
             {uiLang === "JP" ? opt.jp : opt.en}
           </button>
