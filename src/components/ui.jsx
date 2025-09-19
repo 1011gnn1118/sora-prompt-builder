@@ -25,6 +25,7 @@ export const Button = ({
   variant = "default",
   title,
   type = "button",
+  disabled = false,
 }) => {
   const base =
     "inline-flex items-center gap-2 rounded-2xl px-3.5 py-2.5 text-sm font-medium transition border focus:outline-none";
@@ -37,8 +38,9 @@ export const Button = ({
     <button
       type={type}
       title={title}
+      disabled={disabled}
       onClick={onClick}
-      className={`${base} ${styles[variant]} ${className}`}
+      className={`${base} ${styles[variant]} ${disabled ? "opacity-60 cursor-not-allowed" : ""} ${className}`}
     >
       {children}
     </button>
@@ -106,13 +108,22 @@ export const Textarea = ({
   placeholder,
   rows = 4,
   className = "",
+  readOnly = false,
+  inputRef,
+  highlight = false,
+  highlightKey,
 }) => (
   <textarea
+    ref={inputRef}
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
     rows={rows}
-    className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm ${className}`}
+    readOnly={readOnly}
+    data-highlight-key={highlightKey}
+    className={`w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm ${
+      highlight ? "ring-2 ring-emerald-400 shadow-[0_0_0_3px_rgba(16,185,129,0.25)] animate-pulse" : ""
+    } ${className}`}
   />
 );
 
@@ -128,3 +139,19 @@ export const Toggle = ({ checked, onChange, label }) => (
   </label>
 );
 
+export const ActionBar = ({ children }) => (
+  <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 bg-white/90 backdrop-blur">
+    <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2 overflow-x-auto">
+      {children}
+    </div>
+  </div>
+);
+
+export const FloatingToast = ({ message }) => {
+  if (!message) return null;
+  return (
+    <div className="pointer-events-none fixed bottom-24 left-1/2 z-40 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg animate-in fade-in duration-150">
+      {message}
+    </div>
+  );
+};
