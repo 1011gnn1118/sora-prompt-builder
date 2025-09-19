@@ -240,6 +240,30 @@ export const animeOptions = {
       jp: "アイドルアニメスタイル、光沢のあるハイライト、きらめく瞳、明るく鮮やかな色彩、磨かれたクリーンな線",
     },
   ],
+  cameraMovement: [
+    { en: "static anime cut", jp: "静止したアニメカット" },
+    { en: "slow pan across scene", jp: "ゆっくりパンして全景をなぞる" },
+    { en: "dramatic push-in", jp: "ドラマチックなプッシュイン" },
+    { en: "follow-through tracking", jp: "被写体を追うトラッキング" },
+    { en: "handheld wobble", jp: "手持ち風の揺れ" },
+  ],
+  shutterSpeed: [
+    { en: "1/48s (natural motion blur)", jp: "1/48秒（自然なモーションブラー）" },
+    { en: "1/60s (anime crisp)", jp: "1/60秒（アニメ的なキレ）" },
+    { en: "1/120s (sharp staccato)", jp: "1/120秒（シャープでスタッカート）" },
+  ],
+  colorGrade: [
+    { en: "neutral anime grade", jp: "ニュートラルなアニメ調グレーディング" },
+    { en: "pastel dream grade", jp: "パステルで夢見心地なグレーディング" },
+    { en: "neon city pop grade", jp: "ネオンのシティポップ調グレーディング" },
+    { en: "cinematic shadow grade", jp: "シネマ風の影を強調したグレーディング" },
+  ],
+  renderFinish: [
+    { en: "4K clean line art render", jp: "4Kのクリーンな線画レンダー" },
+    { en: "film grain overlay", jp: "フィルムグレインを重ねる" },
+    { en: "HDR anime composite", jp: "HDR対応のアニメ合成" },
+    { en: "cel shading preserved", jp: "セル塗りの質感を保持" },
+  ],
 };
 
 // Same as in options.js but for anime-specific groups.

@@ -180,15 +180,20 @@ export const options = {
     { en: "playing acoustic guitar", jp: "アコースティックギターを弾く" },
     { en: "painting on a canvas", jp: "キャンバスに絵を描く" },
     { en: "stretching arms lazily", jp: "腕を伸ばして伸びをする" },
+    { en: "closing a journal and exhaling", jp: "日記帳を閉じて息を吐く" },
+    { en: "turning pages slowly", jp: "ゆっくりページをめくる" },
+    { en: "glancing at the camera then looking away", jp: "カメラを一瞬見てから視線を外す" },
   ],
   shotDistance: [
     { en: "Extreme Long Shot (ELS)", jp: "エクストリームロングショット（人物がほとんど豆粒、背景中心）" },
     { en: "Long Shot (LS)", jp: "ロングショット（全身が収まる）" },
     { en: "Medium Long Shot (MLS)", jp: "ミディアムロングショット（膝から上）" },
     { en: "Medium Shot (MS)", jp: "ミディアムショット（腰から上）" },
+    { en: "Medium Wide Shot (MWS)", jp: "ミディアムワイドショット（膝下まで）" },
     { en: "Medium Close-up (MCU)", jp: "ミディアムクローズアップ（胸から上）" },
     { en: "Close-up (CU)", jp: "クローズアップ（顔や小物中心）" },
     { en: "Extreme Close-up (ECU)", jp: "エクストリームクローズアップ（目や口など細部のみ）" },
+    { en: "Wide Establishing Shot", jp: "ワイドな導入ショット" },
   ],
   shotAngle: [
     { en: "", jp: "" },
@@ -214,8 +219,32 @@ export const options = {
   cameraLens: [
     { en: "Fisheye (8mm)", jp: "フィッシュアイ(8mm)" },
     { en: "Wide-angle (24mm)", jp: "広角(24mm)" },
+    { en: "Wide standard (35mm)", jp: "準広角(35mm)" },
     { en: "Portrait (85mm)", jp: "ポートレート(85mm)" },
+    { en: "Telephoto portrait (105mm)", jp: "中望遠ポートレート(105mm)" },
     { en: "Telephoto (200mm)", jp: "望遠(200mm)" },
+  ],
+  cameraMovement: [
+    { en: "locked static frame", jp: "完全固定のフレーム" },
+    { en: "slow dolly-in toward subject", jp: "被写体へゆっくりドリーイン" },
+    { en: "subtle dolly-out revealing space", jp: "空間を見せる穏やかなドリーアウト" },
+    { en: "gentle left-to-right track", jp: "左から右への穏やかなトラック" },
+    { en: "slow pan following gaze", jp: "視線に合わせてゆっくりパン" },
+    { en: "elevating tilt up reveal", jp: "上方向へ見せるティルトアップ" },
+    { en: "handheld micro sway", jp: "ハンドヘルドの微かな揺れ" },
+  ],
+  shutterSpeed: [
+    { en: "1/48s (180° shutter, natural motion blur)", jp: "1/48秒（180°シャッターで自然なモーションブラー）" },
+    { en: "1/60s (slightly crisp motion)", jp: "1/60秒（ややシャープな動き）" },
+    { en: "1/96s (controlled staccato)", jp: "1/96秒（抑制されたスタッカート感）" },
+    { en: "1/120s (crisp freeze for details)", jp: "1/120秒（細部重視のシャープさ）" },
+  ],
+  colorGrade: [
+    { en: "neutral cinematic grade", jp: "ニュートラルなシネマ調グレーディング" },
+    { en: "warm Kodak-like grade", jp: "Kodak風の温かいグレーディング" },
+    { en: "cool teal-and-orange grade", jp: "ティール＆オレンジのクールなグレーディング" },
+    { en: "moody low-contrast grade", jp: "ローコントラストでムーディーなグレーディング" },
+    { en: "high-contrast noir grade", jp: "ハイコントラストのノワール調" },
   ],
   lighting: [
     { en: "soft desk lamp + ambient practicals", jp: "柔らかなデスクランプ＋室内の実用光" },
@@ -261,6 +290,13 @@ export const options = {
     { en: "Dark cinematic tones", jp: "ダークなシネマ調トーン" },
     { en: "Neon cyberpunk", jp: "ネオン・サイバーパンク" },
     { en: "Fashion-forward couture", jp: "最先端のクチュール" },
+  ],
+  renderFinish: [
+    { en: "deliver in 4K UHD, 24fps master", jp: "4K UHD・24fpsのマスターで仕上げ" },
+    { en: "graded for HDR10 delivery", jp: "HDR10仕上げ" },
+    { en: "clean prores-style export", jp: "ProRes風のクリーンな書き出し" },
+    { en: "film grain preserved, no heavy denoise", jp: "フィルムグレインを保持し強いノイズ除去はしない" },
+    { en: "sRGB safe output", jp: "sRGB準拠の出力" },
   ],
 };
 
