@@ -246,15 +246,12 @@ export default function AnimePromptBuilder({ uiLang = "EN" }) {
       <FloatingToast message={toast} />
 
       <header className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-2 sm:py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Wand2 className="h-5 w-5" />
-            <div>
-              <h1 className="text-base sm:text-lg font-semibold">Anime Prompt Builder — EN/JP</h1>
-              <p className="text-xs text-gray-500">Slot-structured EN prompt keeps translation stable.</p>
-            </div>
+            <h1 className="text-sm sm:text-lg font-semibold">Anime Prompt Builder — EN/JP</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:justify-end">
             <Button onClick={randomize} title="Randomize anime prompt">
               <Shuffle className="h-4 w-4" /> Random
             </Button>
